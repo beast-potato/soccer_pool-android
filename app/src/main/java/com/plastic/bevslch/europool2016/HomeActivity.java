@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 
 import com.plastic.bevslch.europool2016.Fragments.CupFragment;
+import com.plastic.bevslch.europool2016.Fragments.StandingFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,7 +38,7 @@ public class HomeActivity extends AppCompatActivity {
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
         adapter.addFragment(new CupFragment(), "Cup");
-        adapter.addFragment(new CupFragment(), "Standings");
+        adapter.addFragment(new StandingFragment(), "Standings");
         viewPager.setAdapter(adapter);
     }
 
