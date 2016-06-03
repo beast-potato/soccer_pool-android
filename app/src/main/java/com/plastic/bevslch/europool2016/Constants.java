@@ -5,6 +5,6 @@ package com.plastic.bevslch.europool2016;
  */
 
 public class Constants {
-    public static final String BASE_URL ="http://www.nifegun.com";
+    public static final String BASE_URL = "http://104.131.118.14";
     public static final String contentTypeJson = "application/json";
 }

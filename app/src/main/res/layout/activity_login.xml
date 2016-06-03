@@ -10,15 +10,6 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.plastic.bevslch.europool2016.LoginActivity">
 
-    <!-- Login progress -->
-    <ProgressBar
-        android:id="@+id/login_progress"
-        style="?android:attr/progressBarStyleLarge"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:visibility="gone" />
-
     <ScrollView
         android:id="@+id/login_form"
         android:layout_width="match_parent"
@@ -73,15 +64,14 @@
                 android:textStyle="bold"
                 android:onClick="signInClick"/>
             <Button
-                android:id="@+id/email_register_button"
+                android:id="@+id/skip_sign_in_button"
                 style="?android:textAppearanceSmall"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:text="REGISTER"
+                android:text="Temp Sign In"
                 android:textStyle="bold"
                 android:onClick="signInClick"/>
-
 
         </LinearLayout>
     </ScrollView>

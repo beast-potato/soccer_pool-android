@@ -21,7 +21,6 @@ import com.plastic.bevslch.europool2016.endpoints.poolendpointresponse.Datum;
 import com.plastic.bevslch.europool2016.endpoints.poolendpointresponse.PoolEndpointApiResponse;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by sjsaldanha on 2016-06-01.
@@ -63,6 +62,5 @@ public class    StandingFragment extends Fragment {
                 Log.i(TAG,error.getLocalizedMessage());
             }
         });
-        //binding.set
     }
 }
