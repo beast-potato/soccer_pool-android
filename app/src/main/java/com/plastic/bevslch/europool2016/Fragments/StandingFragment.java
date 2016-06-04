@@ -59,7 +59,7 @@ public class    StandingFragment extends Fragment {
 
             @Override
             public void onError(VolleyError error) {
-                Log.i(TAG,error.getLocalizedMessage());
+                Log.i(TAG, "error:" + error.networkResponse.statusCode);
             }
         });
     }
