@@ -4,12 +4,47 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="CUP FRAGMENT"
-        android:textSize="40dp"
-        android:textStyle="bold"
-        android:layout_centerInParent="true"/>
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/cup_refresh"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/cup_upcoming_title"
+                style="@style/CupTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/cup_upcoming_title"/>
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/cup_upcoming_list"
+                style="@style/CupList"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/cup_upcoming_title"/>
+
+            <TextView
+                android:id="@+id/cup_completed_title"
+                style="@style/CupTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/cup_upcoming_list"
+                android:text="@string/cup_completed_title"/>
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/cup_completed_list"
+                style="@style/CupList"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/cup_completed_title"/>
+
+
+        </RelativeLayout>
+
+    </android.support.v4.widget.SwipeRefreshLayout>
 
 </RelativeLayout>
