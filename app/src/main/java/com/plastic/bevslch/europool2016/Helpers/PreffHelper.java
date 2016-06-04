@@ -13,6 +13,7 @@ public class PreffHelper {
     private static PreffHelper instance;
     public static final String SETTINGS_FILENAME = "soccer_pool_preffs";
     public static final String KEY_EMAIL = "preff_email";
+    public static final String KEY_TOKEN = "preff_token";
     private SharedPreferences settings;
 
     private PreffHelper(Context context) {
@@ -31,5 +32,13 @@ public class PreffHelper {
 
     public String getEmail() {
         return settings.getString(KEY_EMAIL, null);
+    }
+
+    public void setToken(String token) {
+        settings.edit().putString(KEY_TOKEN, token).apply();
+    }
+
+    public String getToken() {
+        return settings.getString(KEY_TOKEN, null);
     }
 }

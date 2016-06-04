@@ -107,7 +107,8 @@ public class LoginActivity extends AppCompatActivity{
                         public void onResponse(LoginEndpointApiResponse data) {
                             dialog.dismiss();
                             if (data != null && data.success) {
-                                PreffHelper.getInstance().setEmail(mEmailView.getText().toString()); //can be token?
+                                PreffHelper.getInstance().setEmail(mEmailView.getText().toString());
+                                PreffHelper.getInstance().setToken(data.token);
                                 startActivity(new Intent(LoginActivity.this, HomeActivity.class));
                             } else {
                                 Toast.makeText(LoginActivity.this, data.errorMessage, Toast.LENGTH_LONG).show();

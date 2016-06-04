@@ -7,9 +7,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.plastic.bevslch.europool2016.Models.Fixture;
-import com.plastic.bevslch.europool2016.Models.Players;
 import com.plastic.bevslch.europool2016.R;
+import com.plastic.bevslch.europool2016.endpoints.gamesendpointresponse.Datum;
 
 import java.util.List;
 
@@ -17,21 +16,21 @@ import java.util.List;
  * Created by sjsaldanha on 2016-06-02.
  */
 
-public class CupRecyclerViewAdapter extends RecyclerView.Adapter<CupRecyclerViewAdapter.FixtureViewHolder>{
-    List<Fixture> fixtures;
+public class CupUpcomingAdapter extends RecyclerView.Adapter<CupUpcomingAdapter.UpcomingFixtureViewHolder>{
+    private List<Datum> fixtures;
 
-    public CupRecyclerViewAdapter(List<Fixture> persons){
-        this.fixtures = persons;
+    public CupUpcomingAdapter(List<Datum> games){
+        this.fixtures = games;
     }
     @Override
-    public CupRecyclerViewAdapter.FixtureViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public CupUpcomingAdapter.UpcomingFixtureViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_standing, parent, false);
-        CupRecyclerViewAdapter.FixtureViewHolder pvh = new FixtureViewHolder(v);
+        CupUpcomingAdapter.UpcomingFixtureViewHolder pvh = new UpcomingFixtureViewHolder(v);
         return pvh;
     }
 
     @Override
-    public void onBindViewHolder(FixtureViewHolder holder, int position) {
+    public void onBindViewHolder(UpcomingFixtureViewHolder holder, int position) {
         holder.teamHome.setText(fixtures.get(position).getHomeTeam());
         holder.teamAway.setText(fixtures.get(position).getAwayTeam());
     }
@@ -45,12 +44,12 @@ public class CupRecyclerViewAdapter extends RecyclerView.Adapter<CupRecyclerView
         super.onAttachedToRecyclerView(recyclerView);
     }
 
-    public static class FixtureViewHolder extends RecyclerView.ViewHolder {
+    public static class UpcomingFixtureViewHolder extends RecyclerView.ViewHolder {
         CardView cv;
         TextView teamHome;
         TextView teamAway;
 
-        FixtureViewHolder(View itemView) {
+        UpcomingFixtureViewHolder(View itemView) {
             super(itemView);
             cv = (CardView) itemView.findViewById(R.id.fixture_card);
             teamHome = (TextView) itemView.findViewById(R.id.team_home);

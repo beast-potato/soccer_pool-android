@@ -7,7 +7,7 @@ import com.beastpotato.potato.api.HeaderParam;
 /**
  * Created by Oleksiy on 6/1/2016.
  */
-@Endpoint(httpMethod = Constants.Http.GET, relativeUrl = "/pool", jsonExample = "{\"success\":true,\"errorCode\":0,\"errorMessage\":\"\",\"data\":[{\"name\":\"Brian\",\"points\":10}]}")
+@Endpoint(httpMethod = Constants.Http.GET, relativeUrl = "/sample/pool", jsonExample = "{\"success\":true,\"errorCode\":0,\"errorMessage\":\"\",\"data\":[{\"name\":\"Brian\",\"points\":10}]}")
 public abstract class PoolEndpoint {
     @HeaderParam("Content-Type")
     String contentType;
