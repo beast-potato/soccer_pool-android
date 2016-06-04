@@ -13,13 +13,18 @@ import android.view.ViewGroup;
 
 import com.android.volley.VolleyError;
 import com.beastpotato.potato.api.net.ApiRequest;
+import com.google.common.collect.ArrayListMultimap;
 import com.plastic.bevslch.europool2016.Constants;
 import com.plastic.bevslch.europool2016.Helpers.PreffHelper;
+import com.plastic.bevslch.europool2016.Helpers.Utilities;
 import com.plastic.bevslch.europool2016.R;
 import com.plastic.bevslch.europool2016.endpoints.GamesEndpointApiRequest;
 import com.plastic.bevslch.europool2016.endpoints.PredictEndpointApiRequest;
+import com.plastic.bevslch.europool2016.endpoints.gamesendpointresponse.Datum;
 import com.plastic.bevslch.europool2016.endpoints.gamesendpointresponse.GamesEndpointApiResponse;
 import com.plastic.bevslch.europool2016.endpoints.predictendpointresponse.PredictEndpointApiResponse;
+
+import java.util.ArrayList;
 
 /**
  * Created by sjsaldanha on 2016-06-01.
@@ -29,9 +34,14 @@ public class CupFragment extends Fragment {
 
     private static final String TAG = CupFragment.class.getSimpleName();
 
+    // Views
     private View fragmentView;
     private SwipeRefreshLayout refreshLayout;
     private RecyclerView upcomingList, completedList;
+
+    // Data
+    private ArrayList<Datum> upcomingGames = new ArrayList<>();
+    private ArrayList<Datum> completedGames = new ArrayList<>();
 
     public CupFragment() {
         // Required empty public constructor
@@ -57,7 +67,8 @@ public class CupFragment extends Fragment {
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
-        updateLists();
+        super.onViewCreated(view, savedInstanceState);
+        getGames();
     }
 
     private void initView() {
@@ -72,7 +83,7 @@ public class CupFragment extends Fragment {
                 new SwipeRefreshLayout.OnRefreshListener() {
                     @Override
                     public void onRefresh() {
-                        updateLists();
+                        getGames();
                     }
                 }
         );
@@ -83,26 +94,33 @@ public class CupFragment extends Fragment {
         completedList.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
     }
 
-    private void updateLists() {
-        refreshLayout.setRefreshing(false);
+    private void refreshLists() {
 
-
-    }
-
-    @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        getGames();
-        makePrediction("1", "4", "3");//test
     }
 
     private void getGames() {
+        refreshLayout.setRefreshing(false);
+
         GamesEndpointApiRequest gamesEndpointApiRequest = new GamesEndpointApiRequest(Constants.BASE_URL, getActivity());
         gamesEndpointApiRequest.setToken(PreffHelper.getInstance().getToken());
         gamesEndpointApiRequest.send(new ApiRequest.RequestCompletion<GamesEndpointApiResponse>() {
             @Override
-            public void onResponse(GamesEndpointApiResponse data) {
-                Log.i(TAG, "success:" + data.success);
+            public void onResponse(GamesEndpointApiResponse games) {
+                Log.i(TAG, "success:" + games.success);
+
+                upcomingGames.clear();
+                completedGames.clear();
+
+                if (games.data != null && games.data.size() > 0) {
+                    for (Datum game : games.data) {
+                        if (Utilities.isBeforeNow(game.startTime)){
+                            upcomingGames.add(game);
+                        } else {
+                            completedGames.add(game);
+                        }
+                    }
+                }
+
             }
 
             @Override
