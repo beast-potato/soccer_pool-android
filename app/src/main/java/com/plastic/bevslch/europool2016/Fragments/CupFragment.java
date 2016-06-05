@@ -99,22 +99,23 @@ public class CupFragment extends Fragment implements CupMatchAdapter.CupMatchCli
         completedList.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
         upcomingAdapter = new CupMatchAdapter(getActivity(), upcomingGames, CupMatchAdapter.MATCH_TYPE.UPCOMING, this);
         completedAdapter = new CupMatchAdapter(getActivity(), completedGames, CupMatchAdapter.MATCH_TYPE.COMPLETED, null);
+        upcomingList.setAdapter(upcomingAdapter);
+        completedList.setAdapter(completedAdapter);
     }
 
     private void refreshLists() {
-        upcomingAdapter.updateMatches(upcomingGames);
-        completedAdapter.updateMatches(completedGames);
+        upcomingAdapter.notifyDataSetChanged();
+        completedAdapter.notifyDataSetChanged();
     }
 
     private void getGames() {
-        refreshLayout.setRefreshing(false);
-
         GamesEndpointApiRequest gamesEndpointApiRequest = new GamesEndpointApiRequest(Constants.BASE_URL, getActivity());
         gamesEndpointApiRequest.setToken(PreffHelper.getInstance().getToken());
         gamesEndpointApiRequest.send(new ApiRequest.RequestCompletion<GamesEndpointApiResponse>() {
             @Override
             public void onResponse(GamesEndpointApiResponse games) {
                 Log.i(TAG, "success:" + games.success);
+                refreshLayout.setRefreshing(false);
 
                 if (games.success) {
                     upcomingGames.clear();
@@ -123,9 +124,9 @@ public class CupFragment extends Fragment implements CupMatchAdapter.CupMatchCli
                     if (games.data != null && games.data.size() > 0) {
                         for (Datum game : games.data) {
                             if (Utilities.isBeforeNow(game.startTime)) {
-                                upcomingGames.add(game);
-                            } else {
                                 completedGames.add(game);
+                            } else {
+                                upcomingGames.add(game);
                             }
                         }
                     }
@@ -141,6 +142,7 @@ public class CupFragment extends Fragment implements CupMatchAdapter.CupMatchCli
             public void onError(VolleyError error) {
                 Log.e(TAG, "error" + error.getMessage());
                 Toast.makeText(getActivity(), "Error retrieving matches", Toast.LENGTH_SHORT).show();
+                refreshLayout.setRefreshing(false);
             }
         });
     }

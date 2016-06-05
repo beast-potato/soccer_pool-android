@@ -3,104 +3,127 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:padding="5dp">
 
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:weightSum="3"
-            android:padding="16dp">
+            android:layout_height="match_parent">
 
-            <RelativeLayout
-                android:layout_width="0dp"
+            <LinearLayout
+                android:id="@+id/match_score_info"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1.2">
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:weightSum="3"
+                android:padding="16dp">
+
+                <RelativeLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.2">
+
+                    <TextView
+                        android:id="@+id/match_home_name"
+                        style="@style/CupMatchTeamTitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        tools:text="Spain"/>
+
+                    <ImageView
+                        android:id="@+id/match_home_flag"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_below="@id/match_home_name"
+                        android:scaleType="fitXY"/>
+
+                    <TextView
+                        android:id="@+id/match_home_prediction"
+                        style="@style/CupMatchPrediction"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_alignParentRight="true"
+                        tools:text="8"/>
+
+                    <TextView
+                        android:id="@+id/match_home_score"
+                        style="@style/CupMatchScore"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_toLeftOf="@id/match_home_prediction"
+                        tools:text="8"/>
+
+                </RelativeLayout>
 
                 <TextView
-                    android:id="@+id/match_home_name"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentLeft="true"
-                    tools:text="Spain"/>
+                    android:layout_weight="0.6"
+                    android:gravity="center"
+                    android:padding="10dp"
+                    android:text="@string/cup_match_vs"/>
 
-                <ImageView
-                    android:id="@+id/match_home_flag"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:layout_below="@id/match_home_name"
-                    android:scaleType="fitXY"/>
-
-                <TextView
-                    android:id="@+id/match_home_prediction"
-                    android:layout_width="wrap_content"
+                <RelativeLayout
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_alignParentRight="true"
-                    tools:text="8"/>
+                    android:layout_weight="1.2">
 
-                <TextView
-                    android:id="@+id/match_home_score"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_toLeftOf="@id/match_home_prediction"
-                    tools:text="8"/>
+                    <TextView
+                        android:id="@+id/match_away_name"
+                        style="@style/CupMatchTeamTitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        tools:text="Ukraine"/>
 
-            </RelativeLayout>
+                    <ImageView
+                        android:id="@+id/match_away_flag"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_below="@id/match_away_name"
+                        android:layout_alignParentRight="true"
+                        android:scaleType="fitXY"/>
+
+                    <TextView
+                        android:id="@+id/match_away_prediction"
+                        style="@style/CupMatchPrediction"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_alignParentLeft="true"
+                        tools:text="0"/>
+
+                    <TextView
+                        android:id="@+id/match_away_score"
+                        style="@style/CupMatchScore"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_toRightOf="@id/match_away_prediction"
+                        tools:text="0"/>
+
+                </RelativeLayout>
+
+            </LinearLayout>
 
             <TextView
-                android:layout_width="0dp"
+                android:id="@+id/match_start_time"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="0.6"
-                android:gravity="center"
-                android:padding="10dp"
-                android:text="@string/cup_match_vs"/>
+                android:layout_below="@id/match_score_info"
+                android:layout_centerHorizontal="true"
+                android:padding="5dp"
+                tools:text="11:00, 15 June 2016"/>
 
-            <RelativeLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1.2">
-
-                <TextView
-                    android:id="@+id/match_away_name"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    tools:text="Ukraine"/>
-
-                <ImageView
-                    android:id="@+id/match_away_flag"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:layout_below="@id/match_away_name"
-                    android:layout_alignParentRight="true"
-                    android:scaleType="fitXY"/>
-
-                <TextView
-                    android:id="@+id/match_away_prediction"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_alignParentLeft="true"
-                    tools:text="0"/>
-
-                <TextView
-                    android:id="@+id/match_away_score"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_toRightOf="@id/match_away_prediction"
-                    tools:text="0"/>
-
-            </RelativeLayout>
-
-        </LinearLayout>
+        </RelativeLayout>
 
     </android.support.v7.widget.CardView>
 

@@ -6,21 +6,38 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:textColorPrimary">@color/colorPrimaryText</item>
+        <item name="android:textColorSecondary">@color/colorSecondaryText</item>
     </style>
 
     <style name="CupTitle">
-        <item name="android:background">@android:color/darker_gray</item>
         <item name="android:gravity">center</item>
         <item name="android:padding">10dp</item>
-        <item name="android:textSize">15sp</item>
+        <item name="android:textSize">16sp</item>
         <item name="android:textColor">@android:color/white</item>
+        <item name="android:textStyle">bold</item>
     </style>
 
     <style name="CupList">
-        <item name="android:background">@android:color/white</item>
         <item name="android:scrollbars">none</item>
         <item name="android:padding">10dp</item>
         <item name="android:gravity">center</item>
+    </style>
+
+    <style name="CupMatchTeamTitle">
+        <item name="android:textSize">15sp</item>
+        <item name="android:textColor">@color/colorPrimaryText</item>
+    </style>
+
+    <style name="CupMatchPrediction">
+        <item name="android:textSize">25sp</item>
+        <item name="android:textColor">@color/colorAccent</item>
+    </style>
+
+    <style name="CupMatchScore">
+        <item name="android:textSize">15sp</item>
+        <item name="android:textColor">@color/colorSecondaryText</item>
+        <item name="android:layout_margin">10dp</item>
     </style>
 
 </resources>
