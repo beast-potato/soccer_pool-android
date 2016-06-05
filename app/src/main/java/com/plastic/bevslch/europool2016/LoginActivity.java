@@ -1,6 +1,5 @@
 package com.plastic.bevslch.europool2016;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -20,6 +19,7 @@ import com.beastpotato.potato.api.net.ApiRequest;
 import com.plastic.bevslch.europool2016.Helpers.PreffHelper;
 import com.plastic.bevslch.europool2016.endpoints.LoginEndpointApiRequest;
 import com.plastic.bevslch.europool2016.endpoints.loginendpointresponse.LoginEndpointApiResponse;
+import com.plastic.bevslch.europool2016.views.LoadingOverlayView;
 
 import java.util.List;
 
@@ -47,7 +47,7 @@ public class LoginActivity extends AppCompatActivity{
     private AutoCompleteTextView mEmailView;
     private EditText mPasswordView;
     private Button mEmailSignInButton;
-    private ProgressDialog dialog;
+    private LoadingOverlayView mLoginOverlay;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +65,7 @@ public class LoginActivity extends AppCompatActivity{
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
         mPasswordView = (EditText) findViewById(R.id.password);
         mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
+        mLoginOverlay = (LoadingOverlayView) findViewById(R.id.login_overlay);
     }
 
     private void setListeners() {
@@ -81,7 +82,7 @@ public class LoginActivity extends AppCompatActivity{
         mEmailSignInButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                dialog = ProgressDialog.show(LoginActivity.this, "", "Logging you in. Please wait...", true);
+                mLoginOverlay.setVisibility(View.VISIBLE);
                 LoginEndpointApiRequest loginEndpointApiRequest = new LoginEndpointApiRequest(Constants.BASE_URL, LoginActivity.this);
                 loginEndpointApiRequest.setContentType(Constants.contentTypeJson);
                 loginEndpointApiRequest.setEmail(mEmailView.getText().toString());
@@ -105,7 +106,7 @@ public class LoginActivity extends AppCompatActivity{
                     loginEndpointApiRequest.send(new ApiRequest.RequestCompletion<LoginEndpointApiResponse>() {
                         @Override
                         public void onResponse(LoginEndpointApiResponse data) {
-                            dialog.dismiss();
+                            mLoginOverlay.setVisibility(View.GONE);
                             if (data != null && data.success) {
                                 PreffHelper.getInstance().setEmail(mEmailView.getText().toString());
                                 PreffHelper.getInstance().setToken(data.token);
@@ -117,7 +118,7 @@ public class LoginActivity extends AppCompatActivity{
 
                         @Override
                         public void onError(VolleyError error) {
-                            dialog.dismiss();
+                            mLoginOverlay.setVisibility(View.GONE);
                             StringBuilder builder = new StringBuilder("Error:");
                             if (error.networkResponse != null)
                                 builder.append(error.networkResponse.statusCode);
