@@ -10,10 +10,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.android.volley.VolleyError;
 import com.beastpotato.potato.api.net.ApiRequest;
 import com.google.common.collect.ArrayListMultimap;
+import com.plastic.bevslch.europool2016.Adapters.CupMatchAdapter;
 import com.plastic.bevslch.europool2016.Constants;
 import com.plastic.bevslch.europool2016.Helpers.PreffHelper;
 import com.plastic.bevslch.europool2016.Helpers.Utilities;
@@ -30,7 +32,7 @@ import java.util.ArrayList;
  * Created by sjsaldanha on 2016-06-01.
  */
 
-public class CupFragment extends Fragment {
+public class CupFragment extends Fragment implements CupMatchAdapter.CupMatchClickListener{
 
     private static final String TAG = CupFragment.class.getSimpleName();
 
@@ -38,6 +40,9 @@ public class CupFragment extends Fragment {
     private View fragmentView;
     private SwipeRefreshLayout refreshLayout;
     private RecyclerView upcomingList, completedList;
+
+    // Adapters
+    private CupMatchAdapter upcomingAdapter, completedAdapter;
 
     // Data
     private ArrayList<Datum> upcomingGames = new ArrayList<>();
@@ -92,10 +97,13 @@ public class CupFragment extends Fragment {
     private void configView() {
         upcomingList.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
         completedList.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
+        upcomingAdapter = new CupMatchAdapter(getActivity(), upcomingGames, CupMatchAdapter.MATCH_TYPE.UPCOMING, this);
+        completedAdapter = new CupMatchAdapter(getActivity(), completedGames, CupMatchAdapter.MATCH_TYPE.COMPLETED, null);
     }
 
     private void refreshLists() {
-
+        upcomingAdapter.updateMatches(upcomingGames);
+        completedAdapter.updateMatches(completedGames);
     }
 
     private void getGames() {
@@ -108,24 +116,31 @@ public class CupFragment extends Fragment {
             public void onResponse(GamesEndpointApiResponse games) {
                 Log.i(TAG, "success:" + games.success);
 
-                upcomingGames.clear();
-                completedGames.clear();
+                if (games.success) {
+                    upcomingGames.clear();
+                    completedGames.clear();
 
-                if (games.data != null && games.data.size() > 0) {
-                    for (Datum game : games.data) {
-                        if (Utilities.isBeforeNow(game.startTime)){
-                            upcomingGames.add(game);
-                        } else {
-                            completedGames.add(game);
+                    if (games.data != null && games.data.size() > 0) {
+                        for (Datum game : games.data) {
+                            if (Utilities.isBeforeNow(game.startTime)) {
+                                upcomingGames.add(game);
+                            } else {
+                                completedGames.add(game);
+                            }
                         }
                     }
-                }
 
+                    refreshLists();
+                } else {
+                    Log.e(TAG, "Error: " + games.errorMessage);
+                    Toast.makeText(getActivity(), "Error: " + games.errorMessage, Toast.LENGTH_SHORT).show();
+                }
             }
 
             @Override
             public void onError(VolleyError error) {
-                Log.i(TAG, "error" + error.getMessage());
+                Log.e(TAG, "error" + error.getMessage());
+                Toast.makeText(getActivity(), "Error retrieving matches", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -140,12 +155,25 @@ public class CupFragment extends Fragment {
             @Override
             public void onResponse(PredictEndpointApiResponse data) {
                 Log.i(TAG, "success:" + data.success);
+
+                if (data.success) {
+                    Toast.makeText(getActivity(), "Prediction made", Toast.LENGTH_SHORT).show();
+                } else {
+                    Log.e(TAG, "Error: " + data.errorMessage);
+                    Toast.makeText(getActivity(), "Error: " + data.errorMessage, Toast.LENGTH_SHORT).show();
+                }
             }
 
             @Override
             public void onError(VolleyError error) {
-                Log.i(TAG, "error" + error.getMessage());
+                Log.e(TAG, "error" + error.getMessage());
+                Toast.makeText(getActivity(), "Error submitting prediction", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    @Override
+    public void onUpcomingMatchClick(int position) {
+        // TODO - show prediction dialog
     }
 }

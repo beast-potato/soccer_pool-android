@@ -16,4 +16,5 @@
     <!--Cup-->
     <string name="cup_upcoming_title">Upcoming games</string>
     <string name="cup_completed_title">Completed games</string>
+    <string name="cup_match_vs">VS</string>
 </resources>
