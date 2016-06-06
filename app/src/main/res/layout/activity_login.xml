@@ -13,8 +13,22 @@
         android:paddingLeft="@dimen/activity_horizontal_margin"
         android:paddingRight="@dimen/activity_horizontal_margin"
         android:paddingTop="@dimen/activity_vertical_margin"
-        tools:context="com.plastic.bevslch.europool2016.LoginActivity">
+        tools:context="com.plastic.bevslch.europool2016.LoginActivity"
+        android:weightSum="1">
 
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="124dp"
+            android:src="@drawable/plastic_logo"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="30dp"
+            android:text="EURO 2016 POOL"
+            android:textColor="#FFFFFF"
+            android:gravity="center"/>
 
         <ImageView
             android:src="@drawable/ball"
@@ -26,7 +40,8 @@
             android:id="@+id/login_form"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:paddingTop="150dp">
+            android:layout_weight="0.30">
+
 
             <LinearLayout
                 android:id="@+id/email_login_form"
@@ -71,9 +86,10 @@
                 <Button
                     android:id="@+id/email_sign_in_button"
                     style="?android:textAppearanceSmall"
-                    android:layout_width="match_parent"
+                    android:layout_width="250dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
+                    android:layout_gravity="center_horizontal"
                     android:text="@string/action_sign_in"
                     android:textStyle="bold"
                     android:onClick="signInClick"
@@ -82,9 +98,10 @@
                 <Button
                     android:id="@+id/skip_sign_in_button"
                     style="?android:textAppearanceSmall"
-                    android:layout_width="match_parent"
+                    android:layout_width="250dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
+                    android:layout_gravity="center_horizontal"
                     android:text="Temp Sign In"
                     android:textStyle="bold"
                     android:onClick="signInClick"
