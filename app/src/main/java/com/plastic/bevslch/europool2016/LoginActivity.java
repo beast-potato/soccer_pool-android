@@ -1,7 +1,9 @@
 package com.plastic.bevslch.europool2016;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -48,6 +50,8 @@ public class LoginActivity extends AppCompatActivity{
     private EditText mPasswordView;
     private Button mEmailSignInButton;
     private LoadingOverlayView mLoginOverlay;
+    private Boolean memailConfirmed;
+    private Boolean mdialogClick;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,6 +70,8 @@ public class LoginActivity extends AppCompatActivity{
         mPasswordView = (EditText) findViewById(R.id.password);
         mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
         mLoginOverlay = (LoadingOverlayView) findViewById(R.id.login_overlay);
+        memailConfirmed = false;
+        mdialogClick = false;
     }
 
     private void setListeners() {
@@ -83,52 +89,108 @@ public class LoginActivity extends AppCompatActivity{
             @Override
             public void onClick(View view) {
                 mLoginOverlay.setVisibility(View.VISIBLE);
-                LoginEndpointApiRequest loginEndpointApiRequest = new LoginEndpointApiRequest(Constants.BASE_URL, LoginActivity.this);
-                loginEndpointApiRequest.setContentType(Constants.contentTypeJson);
-                loginEndpointApiRequest.setEmail(mEmailView.getText().toString());
-                loginEndpointApiRequest.setPassword(mPasswordView.getText().toString());
-                List<LoginEndpointApiRequest.Fields> invalidFieldsList = loginEndpointApiRequest.validateFields();
-                if (invalidFieldsList.size() > 0) {
-                    for (LoginEndpointApiRequest.Fields field : invalidFieldsList) {
-                        switch (field) {
-                            case email:
-                                Toast.makeText(LoginActivity.this, "Enter valid email.", Toast.LENGTH_LONG).show();
-                                break;
-                            case password:
-                                Toast.makeText(LoginActivity.this, "Enter valid email.", Toast.LENGTH_LONG).show();
-                                break;
-                            case contentType:
-                                break;
-                        }
-                    }
+                if (!mEmailView.getText().toString().contains("@plasticmobile.com")) {
+                    Toast.makeText(LoginActivity.this, "Enter valid email.", Toast.LENGTH_LONG).show();
                 } else {
-                    Log.i(TAG, "will send request to url: " + loginEndpointApiRequest.getFullUrl());
-                    loginEndpointApiRequest.send(new ApiRequest.RequestCompletion<LoginEndpointApiResponse>() {
-                        @Override
-                        public void onResponse(LoginEndpointApiResponse data) {
-                            mLoginOverlay.setVisibility(View.GONE);
-                            if (data != null && data.success) {
-                                PreffHelper.getInstance().setEmail(mEmailView.getText().toString());
-                                PreffHelper.getInstance().setToken(data.token);
-                                startActivity(new Intent(LoginActivity.this, HomeActivity.class));
-                            } else {
-                                Toast.makeText(LoginActivity.this, data.errorMessage, Toast.LENGTH_LONG).show();
+                    final LoginEndpointApiRequest loginEndpointApiRequest = new LoginEndpointApiRequest(Constants.BASE_URL, LoginActivity.this);
+                    loginEndpointApiRequest.setContentType(Constants.contentTypeJson);
+                    loginEndpointApiRequest.setEmail(mEmailView.getText().toString());
+                    loginEndpointApiRequest.setPassword(mPasswordView.getText().toString());
+                    List<LoginEndpointApiRequest.Fields> invalidFieldsList = loginEndpointApiRequest.validateFields();
+                    if (invalidFieldsList.size() > 0) {
+                        for (LoginEndpointApiRequest.Fields field : invalidFieldsList) {
+                            switch (field) {
+                                case email:
+                                    Toast.makeText(LoginActivity.this, "Enter valid email.", Toast.LENGTH_LONG).show();
+                                    break;
+                                case password:
+                                    Toast.makeText(LoginActivity.this, "Enter valid email.", Toast.LENGTH_LONG).show();
+                                    break;
+                                case contentType:
+                                    break;
                             }
                         }
+                    } else {
+                        Log.i(TAG, "will send request to url: " + loginEndpointApiRequest.getFullUrl());
+                        loginEndpointApiRequest.send(new ApiRequest.RequestCompletion<LoginEndpointApiResponse>() {
+                            @Override
+                            public void onResponse(LoginEndpointApiResponse data) {
+                                mLoginOverlay.setVisibility(View.GONE);
+                                if (data != null) {
+                                    if(data.success){
+                                    PreffHelper.getInstance().setEmail(mEmailView.getText().toString());
+                                    PreffHelper.getInstance().setToken(data.token);
+                                    startActivity(new Intent(LoginActivity.this, HomeActivity.class));
+                                    }
+                                    if(!data.success)
+                                    {
+                                        Log.d(TAG, "onResponse: YOU HAVE REACHED");
+                                        if(data.errorCode == 2) {
+                                            new AlertDialog.Builder(LoginActivity.this)
+                                                    .setTitle("NEW USER")
+                                                    .setMessage("Do you wish to create a new account for the EURO 2016 Pool?")
+                                                    .setPositiveButton("CREATE USER", new DialogInterface.OnClickListener() {
+                                                        public void onClick(DialogInterface dialog, int which) {
+                                                            loginEndpointApiRequest.setSignup("true");
+                                                            loginEndpointApiRequest.send(new ApiRequest.RequestCompletion<LoginEndpointApiResponse>() {
+                                                                @Override
+                                                                public void onResponse(LoginEndpointApiResponse data) {
+                                                                    if (data != null) {
+                                                                        if (data.success) {
+                                                                            PreffHelper.getInstance().setEmail(mEmailView.getText().toString());
+                                                                            PreffHelper.getInstance().setToken(data.token);
+                                                                            startActivity(new Intent(LoginActivity.this, HomeActivity.class));
+                                                                        } else {
+                                                                            Toast.makeText(LoginActivity.this, data.errorMessage, Toast.LENGTH_LONG).show();
+                                                                        }
+                                                                    }
+                                                                }
 
-                        @Override
-                        public void onError(VolleyError error) {
-                            mLoginOverlay.setVisibility(View.GONE);
-                            StringBuilder builder = new StringBuilder("Error:");
-                            if (error.networkResponse != null)
-                                builder.append(error.networkResponse.statusCode);
-                            if (error.getMessage() != null)
-                                builder.append(" - " + error.getMessage());
-                            Toast.makeText(LoginActivity.this, builder.toString(), Toast.LENGTH_LONG).show();
-                            if (error.networkResponse != null)
-                                Log.e(TAG, "Error:" + new String(error.networkResponse.data));
-                        }
-                    });
+                                                                @Override
+                                                                public void onError(VolleyError error) {
+                                                                    mLoginOverlay.setVisibility(View.GONE);
+                                                                    StringBuilder builder = new StringBuilder("Error:");
+                                                                    if (error.networkResponse != null)
+                                                                        builder.append(error.networkResponse.statusCode);
+                                                                    if (error.getMessage() != null)
+                                                                        builder.append(" - " + error.getMessage());
+                                                                    Toast.makeText(LoginActivity.this, builder.toString(), Toast.LENGTH_LONG).show();
+                                                                    if (error.networkResponse != null)
+                                                                        Log.e(TAG, "Error:" + new String(error.networkResponse.data));
+
+                                                                }
+                                                            });
+                                                        }
+                                                    })
+                                                    .setNegativeButton("CANCEL USER", new DialogInterface.OnClickListener() {
+                                                        public void onClick(DialogInterface dialog, int which) {
+                                                            // do nothing
+                                                        }
+                                                    })
+                                                    .setIcon(android.R.drawable.ic_dialog_alert)
+                                                    .show();
+                                        }
+                                    }
+                                } else {
+                                    Toast.makeText(LoginActivity.this, data.errorMessage, Toast.LENGTH_LONG).show();
+                                }
+
+                            }
+
+                            @Override
+                            public void onError(VolleyError error) {
+                                mLoginOverlay.setVisibility(View.GONE);
+                                StringBuilder builder = new StringBuilder("Error:");
+                                if (error.networkResponse != null)
+                                    builder.append(error.networkResponse.statusCode);
+                                if (error.getMessage() != null)
+                                    builder.append(" - " + error.getMessage());
+                                Toast.makeText(LoginActivity.this, builder.toString(), Toast.LENGTH_LONG).show();
+                                if (error.networkResponse != null)
+                                    Log.e(TAG, "Error:" + new String(error.networkResponse.data));
+                            }
+                        });
+                    }
                 }
             }
         });

@@ -1,7 +1,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@drawable/primary_bg">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -14,16 +15,25 @@
         android:paddingTop="@dimen/activity_vertical_margin"
         tools:context="com.plastic.bevslch.europool2016.LoginActivity">
 
-        <ScrollView
+
+        <ImageView
+            android:src="@drawable/ball"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/imageView" />
+
+        <LinearLayout
             android:id="@+id/login_form"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:paddingTop="150dp">
 
             <LinearLayout
                 android:id="@+id/email_login_form"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:background="#FFFFFF">
 
                 <android.support.design.widget.TextInputLayout
                     android:layout_width="match_parent"
@@ -66,7 +76,8 @@
                     android:layout_marginTop="16dp"
                     android:text="@string/action_sign_in"
                     android:textStyle="bold"
-                    android:onClick="signInClick" />
+                    android:onClick="signInClick"
+                    android:background="#DC143C"/>
 
                 <Button
                     android:id="@+id/skip_sign_in_button"
@@ -76,10 +87,11 @@
                     android:layout_marginTop="16dp"
                     android:text="Temp Sign In"
                     android:textStyle="bold"
-                    android:onClick="signInClick" />
+                    android:onClick="signInClick"
+                    android:background="#DC143C" />
 
             </LinearLayout>
-        </ScrollView>
+        </LinearLayout>
     </LinearLayout>
 
     <com.plastic.bevslch.europool2016.views.LoadingOverlayView
