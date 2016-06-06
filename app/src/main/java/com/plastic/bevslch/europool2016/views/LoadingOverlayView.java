@@ -1,6 +1,5 @@
 package com.plastic.bevslch.europool2016.views;
 
-import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.content.Context;
@@ -51,27 +50,6 @@ public class LoadingOverlayView extends RelativeLayout {
         fadeInAnim.setDuration(1000);
         animatorSet.playTogether(fadeInAnim, rotationAnim);
         fadeOutAnim = ObjectAnimator.ofFloat(this, "alpha", 1.0f, 0.0f);
-        fadeOutAnim.addListener(new Animator.AnimatorListener() {
-            @Override
-            public void onAnimationStart(Animator animation) {
-
-            }
-
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                LoadingOverlayView.super.setVisibility(visibility);
-            }
-
-            @Override
-            public void onAnimationCancel(Animator animation) {
-
-            }
-
-            @Override
-            public void onAnimationRepeat(Animator animation) {
-
-            }
-        });
     }
 
     private void startAnimations() {
@@ -81,8 +59,8 @@ public class LoadingOverlayView extends RelativeLayout {
     @Override
     public void setVisibility(int visibility) {
         this.visibility = visibility;
+        super.setVisibility(visibility);
         if (visibility == VISIBLE) {
-            super.setVisibility(visibility);
             startAnimations();
         } else {
             animatorSet.end();

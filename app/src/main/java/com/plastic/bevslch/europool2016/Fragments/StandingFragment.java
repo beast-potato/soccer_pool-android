@@ -3,6 +3,7 @@ package com.plastic.bevslch.europool2016.Fragments;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -19,6 +20,7 @@ import com.plastic.bevslch.europool2016.R;
 import com.plastic.bevslch.europool2016.endpoints.PoolEndpointApiRequest;
 import com.plastic.bevslch.europool2016.endpoints.poolendpointresponse.Datum;
 import com.plastic.bevslch.europool2016.endpoints.poolendpointresponse.PoolEndpointApiResponse;
+import com.plastic.bevslch.europool2016.views.LoadingOverlayView;
 
 import java.util.ArrayList;
 
@@ -29,37 +31,70 @@ import java.util.ArrayList;
 public class    StandingFragment extends Fragment {
     private static final String TAG = "StandingFragment";
 
+    private View fragmentView;
+    private SwipeRefreshLayout refreshLayout;
+    private LoadingOverlayView loadingOverlayView;
+    private RecyclerView rv;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_standings, container, false);
+        fragmentView = inflater.inflate(R.layout.fragment_standings, container, false);
+        initView();
+        initListeners();
+        configView();
+        return fragmentView;
     }
+
+    private void initView() {
+        rv = (RecyclerView) fragmentView.findViewById(R.id.rv);
+        loadingOverlayView = (LoadingOverlayView) fragmentView.findViewById(R.id.loading_overlay);
+        refreshLayout = (SwipeRefreshLayout) fragmentView.findViewById(R.id.standings_refresh);
+    }
+
+    private void initListeners() {
+        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                loadStandings();
+            }
+        });
+    }
+
+    private void configView() {
+        LinearLayoutManager llm = new LinearLayoutManager(getContext());
+        rv.setLayoutManager(llm);
+        loadingOverlayView.setVisibility(View.VISIBLE);
+    }
+
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        final RecyclerView rv = (RecyclerView)view.findViewById(R.id.rv);
-        LinearLayoutManager llm = new LinearLayoutManager(getContext());
-        rv.setLayoutManager(llm);
-        PoolEndpointApiRequest poolRequest = new PoolEndpointApiRequest(Constants.BASE_URL,getActivity());
+        loadStandings();
+    }
+
+    private void loadStandings() {
+        PoolEndpointApiRequest poolRequest = new PoolEndpointApiRequest(Constants.BASE_URL, getActivity());
         poolRequest.setContentType(Constants.contentTypeJson);
         poolRequest.send(new ApiRequest.RequestCompletion<PoolEndpointApiResponse>() {
             @Override
             public void onResponse(PoolEndpointApiResponse data) {
-                Log.i(TAG,"Api call status success: "+data.data.get(0).name);
+                Log.i(TAG, "Standings api call status success: " + data.success);
+                loadingOverlayView.setVisibility(View.GONE);
+                refreshLayout.setRefreshing(false);
                 ArrayList<Players> gamePlayers = new ArrayList<Players>();
-                for (Datum d:data.data) {
+                for (Datum d : data.data) {
                     gamePlayers.add(new Players(d.name, d.points.toString()));
                 }
                 StandingRecylcerViewAdapter standingsAdapter = new StandingRecylcerViewAdapter(gamePlayers);
                 rv.setAdapter(standingsAdapter);
-
             }
 
             @Override
             public void onError(VolleyError error) {
                 Log.i(TAG, "error:" + error.networkResponse.statusCode);
+                loadingOverlayView.setVisibility(View.GONE);
+                refreshLayout.setRefreshing(false);
             }
         });
     }

@@ -1,7 +1,6 @@
 package com.plastic.bevslch.europool2016.Fragments;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -14,7 +13,6 @@ import android.widget.Toast;
 
 import com.android.volley.VolleyError;
 import com.beastpotato.potato.api.net.ApiRequest;
-import com.google.common.collect.ArrayListMultimap;
 import com.plastic.bevslch.europool2016.Adapters.CupMatchAdapter;
 import com.plastic.bevslch.europool2016.Constants;
 import com.plastic.bevslch.europool2016.Helpers.PreffHelper;
@@ -25,6 +23,7 @@ import com.plastic.bevslch.europool2016.endpoints.PredictEndpointApiRequest;
 import com.plastic.bevslch.europool2016.endpoints.gamesendpointresponse.Datum;
 import com.plastic.bevslch.europool2016.endpoints.gamesendpointresponse.GamesEndpointApiResponse;
 import com.plastic.bevslch.europool2016.endpoints.predictendpointresponse.PredictEndpointApiResponse;
+import com.plastic.bevslch.europool2016.views.LoadingOverlayView;
 
 import java.util.ArrayList;
 
@@ -40,6 +39,7 @@ public class CupFragment extends Fragment implements CupMatchAdapter.CupMatchCli
     private View fragmentView;
     private SwipeRefreshLayout refreshLayout;
     private RecyclerView upcomingList, completedList;
+    private LoadingOverlayView loadingOverlayView;
 
     // Adapters
     private CupMatchAdapter upcomingAdapter, completedAdapter;
@@ -62,7 +62,6 @@ public class CupFragment extends Fragment implements CupMatchAdapter.CupMatchCli
                              Bundle savedInstanceState) {
 
         fragmentView = inflater.inflate(R.layout.fragment_cup, container, false);
-
         initView();
         initListeners();
         configView();
@@ -80,10 +79,10 @@ public class CupFragment extends Fragment implements CupMatchAdapter.CupMatchCli
         refreshLayout = (SwipeRefreshLayout) fragmentView.findViewById(R.id.cup_refresh);
         upcomingList = (RecyclerView) fragmentView.findViewById(R.id.cup_upcoming_list);
         completedList = (RecyclerView) fragmentView.findViewById(R.id.cup_completed_list);
+        loadingOverlayView = (LoadingOverlayView) fragmentView.findViewById(R.id.loading_overlay);
     }
 
     private void initListeners() {
-
         refreshLayout.setOnRefreshListener(
                 new SwipeRefreshLayout.OnRefreshListener() {
                     @Override
@@ -101,6 +100,7 @@ public class CupFragment extends Fragment implements CupMatchAdapter.CupMatchCli
         completedAdapter = new CupMatchAdapter(getActivity(), completedGames, CupMatchAdapter.MATCH_TYPE.COMPLETED, null);
         upcomingList.setAdapter(upcomingAdapter);
         completedList.setAdapter(completedAdapter);
+        loadingOverlayView.setVisibility(View.VISIBLE);
     }
 
     private void refreshLists() {
@@ -115,6 +115,7 @@ public class CupFragment extends Fragment implements CupMatchAdapter.CupMatchCli
             @Override
             public void onResponse(GamesEndpointApiResponse games) {
                 Log.i(TAG, "success:" + games.success);
+                loadingOverlayView.setVisibility(View.GONE);
                 refreshLayout.setRefreshing(false);
 
                 if (games.success) {
@@ -142,6 +143,7 @@ public class CupFragment extends Fragment implements CupMatchAdapter.CupMatchCli
             public void onError(VolleyError error) {
                 Log.e(TAG, "error" + error.getMessage());
                 Toast.makeText(getActivity(), "Error retrieving matches", Toast.LENGTH_SHORT).show();
+                loadingOverlayView.setVisibility(View.GONE);
                 refreshLayout.setRefreshing(false);
             }
         });
