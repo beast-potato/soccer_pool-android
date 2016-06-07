@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.VolleyError;
@@ -36,14 +37,16 @@ public class CupFragment extends Fragment implements CupMatchAdapter.CupMatchCli
     // Views
     private View fragmentView;
     private SwipeRefreshLayout refreshLayout;
-    private RecyclerView upcomingList, completedList;
+    private RecyclerView upcomingList, completedList, progressList;
+    private TextView upcomingEmpty, completedEmpty, progressEmpty;
 
     // Adapters
-    private CupMatchAdapter upcomingAdapter, completedAdapter;
+    private CupMatchAdapter upcomingAdapter, completedAdapter, progressAdapter;
 
     // Data
     private ArrayList<Datum> upcomingGames = new ArrayList<>();
     private ArrayList<Datum> completedGames = new ArrayList<>();
+    private ArrayList<Datum> progressGames = new ArrayList<>();
 
     public CupFragment() {
         // Required empty public constructor
@@ -77,6 +80,10 @@ public class CupFragment extends Fragment implements CupMatchAdapter.CupMatchCli
         refreshLayout = (SwipeRefreshLayout) fragmentView.findViewById(R.id.cup_refresh);
         upcomingList = (RecyclerView) fragmentView.findViewById(R.id.cup_upcoming_list);
         completedList = (RecyclerView) fragmentView.findViewById(R.id.cup_completed_list);
+        progressList = (RecyclerView) fragmentView.findViewById(R.id.cup_progress_list);
+        upcomingEmpty = (TextView) fragmentView.findViewById(R.id.cup_upcoming_empty);
+        completedEmpty = (TextView) fragmentView.findViewById(R.id.cup_completed_empty);
+        progressEmpty = (TextView) fragmentView.findViewById(R.id.cup_progress_empty);
     }
 
     private void initListeners() {
@@ -94,15 +101,43 @@ public class CupFragment extends Fragment implements CupMatchAdapter.CupMatchCli
     private void configView() {
         upcomingList.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
         completedList.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
+        progressList.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
         upcomingAdapter = new CupMatchAdapter(getActivity(), upcomingGames, CupMatchAdapter.MATCH_TYPE.UPCOMING, this);
         completedAdapter = new CupMatchAdapter(getActivity(), completedGames, CupMatchAdapter.MATCH_TYPE.COMPLETED, null);
+        progressAdapter = new CupMatchAdapter(getActivity(), completedGames, CupMatchAdapter.MATCH_TYPE.PROGRESS, null);
         upcomingList.setAdapter(upcomingAdapter);
         completedList.setAdapter(completedAdapter);
+        progressList.setAdapter(progressAdapter);
     }
 
     private void refreshLists() {
         upcomingAdapter.notifyDataSetChanged();
         completedAdapter.notifyDataSetChanged();
+        progressAdapter.notifyDataSetChanged();
+
+        if (upcomingGames.isEmpty()) {
+            upcomingList.setVisibility(View.GONE);
+            upcomingEmpty.setVisibility(View.VISIBLE);
+        } else {
+            upcomingList.setVisibility(View.VISIBLE);
+            upcomingEmpty.setVisibility(View.GONE);
+        }
+
+        if (completedGames.isEmpty()) {
+            completedList.setVisibility(View.GONE);
+            completedEmpty.setVisibility(View.VISIBLE);
+        } else {
+            completedList.setVisibility(View.VISIBLE);
+            completedEmpty.setVisibility(View.GONE);
+        }
+
+        if (progressGames.isEmpty()) {
+            progressList.setVisibility(View.GONE);
+            progressEmpty.setVisibility(View.VISIBLE);
+        } else {
+            progressList.setVisibility(View.VISIBLE);
+            progressEmpty.setVisibility(View.GONE);
+        }
     }
 
     private void getGames() {
@@ -117,11 +152,16 @@ public class CupFragment extends Fragment implements CupMatchAdapter.CupMatchCli
                 if (games.success) {
                     upcomingGames.clear();
                     completedGames.clear();
+                    progressGames.clear();
 
                     if (games.data != null && games.data.size() > 0) {
                         for (Datum game : games.data) {
                             if (Utilities.isBeforeNow(game.startTime)) {
-                                completedGames.add(game);
+                                if (Utilities.isMatchInProgress(game.startTime)) {
+                                    progressGames.add(game);
+                                } else {
+                                    completedGames.add(game);
+                                }
                             } else {
                                 upcomingGames.add(game);
                             }
