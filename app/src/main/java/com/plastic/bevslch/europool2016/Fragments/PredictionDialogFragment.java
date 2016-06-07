@@ -3,6 +3,7 @@ package com.plastic.bevslch.europool2016.Fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +12,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.VolleyError;
 import com.beastpotato.potato.api.net.ApiRequest;
@@ -84,9 +86,13 @@ public class PredictionDialogFragment extends DialogFragment {
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                submit.setText(R.string.prediction_dialog_submit_progress);
-                submit.setEnabled(false);
-                makePrediction(match.gameID, homeScore.getText().toString(), awayScore.getText().toString());
+                if (!TextUtils.isEmpty(homeScore.getText()) && !TextUtils.isEmpty(awayScore.getText())) {
+                    submit.setText(R.string.prediction_dialog_submit_progress);
+                    submit.setEnabled(false);
+                    makePrediction(match.gameID, homeScore.getText().toString(), awayScore.getText().toString());
+                } else {
+                    Toast.makeText(getActivity(), "Score missing", Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }
@@ -104,6 +110,9 @@ public class PredictionDialogFragment extends DialogFragment {
 
         homeName.setText(match.homeTeam.name);
         awayName.setText(match.awayTeam.name);
+
+        homeScore.setText(String.valueOf(match.prediction.homeGoals));
+        awayScore.setText(String.valueOf(match.prediction.awayGoals));
 
         Picasso.with(getActivity())
                 .load(match.homeTeam.flag)
