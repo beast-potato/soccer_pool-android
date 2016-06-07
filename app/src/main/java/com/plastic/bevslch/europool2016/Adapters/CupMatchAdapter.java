@@ -9,7 +9,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.plastic.bevslch.europool2016.Helpers.Utilities;
-import com.plastic.bevslch.europool2016.Models.Fixture;
 import com.plastic.bevslch.europool2016.R;
 import com.plastic.bevslch.europool2016.endpoints.gamesendpointresponse.Datum;
 import com.squareup.picasso.Picasso;
@@ -22,13 +21,14 @@ import java.util.List;
 public class CupMatchAdapter extends RecyclerView.Adapter<CupMatchAdapter.FixtureViewHolder>{
     private static final String TAG = CupMatchAdapter.class.getSimpleName();
 
-    public enum MATCH_TYPE { UPCOMING, COMPLETED }
+    public enum MATCH_TYPE { UPCOMING, COMPLETED, PROGRESS }
     public interface CupMatchClickListener {
         void onUpcomingMatchClick(int position);
     }
 
     public static final int TYPE_UPCOMING = 0;
     public static final int TYPE_COMPLETED = 1;
+    public static final int TYPE_PROGRESS = 2;
 
     private Context context;
     private List<Datum> fixtures;
@@ -56,7 +56,7 @@ public class CupMatchAdapter extends RecyclerView.Adapter<CupMatchAdapter.Fixtur
         holder.homePrediction.setText(String.valueOf(fixtures.get(position).prediction.homeGoals));
         holder.awayPrediction.setText(String.valueOf(fixtures.get(position).prediction.awayGoals));
 
-        if (type == MATCH_TYPE.UPCOMING) {
+        if (type == MATCH_TYPE.UPCOMING || type == MATCH_TYPE.PROGRESS) {
             holder.homeScore.setVisibility(View.GONE);
             holder.awayScore.setVisibility(View.GONE);
             holder.matchStartTime.setText(Utilities.formatDate(fixtures.get(position).startTime));
@@ -87,8 +87,10 @@ public class CupMatchAdapter extends RecyclerView.Adapter<CupMatchAdapter.Fixtur
     public int getItemViewType(int position) {
         if (type == MATCH_TYPE.UPCOMING) {
             return TYPE_UPCOMING;
-        } else {
+        } else if (type == MATCH_TYPE.COMPLETED){
             return TYPE_COMPLETED;
+        } else {
+            return TYPE_PROGRESS;
         }
     }
 

@@ -9,4 +9,5 @@ public class Constants {
     public static final String contentTypeJson = "application/json";
     public static final String serverDatePattern = "yyyy-MM-dd'T'HH:mm:ss'Z'";
     public static final String uiDatePattern = "HH:mm, dd MMM yyyy";
+    public static final int matchAverageDuration =  (45 + 15 + 45 + 10); // 10 min overtime for the 2 parts to cover worst scenario
 }

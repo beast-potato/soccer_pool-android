@@ -116,11 +116,13 @@
 
             <TextView
                 android:id="@+id/match_start_time"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/match_score_info"
                 android:layout_centerHorizontal="true"
-                android:padding="5dp"
+                android:gravity="center"
+                android:background="@color/colorStarTimeBg"
+                android:padding="2dp"
                 tools:text="11:00, 15 June 2016"/>
 
         </RelativeLayout>
