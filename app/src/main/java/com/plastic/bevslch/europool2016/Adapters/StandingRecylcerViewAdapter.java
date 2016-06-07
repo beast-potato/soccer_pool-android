@@ -5,7 +5,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.plastic.bevslch.europool2016.Models.Players;
@@ -35,6 +34,7 @@ public class StandingRecylcerViewAdapter extends RecyclerView.Adapter<StandingRe
         holder.playerName.setText(players.get(position).getName());
         holder.playerPoints.setText(players.get(position).getPoints());
         holder.playerPosition.setText(players.get(position).getPosition().toString());
+        holder.cv.setBackgroundColor(players.get(position).getColor());
     }
 
     @Override

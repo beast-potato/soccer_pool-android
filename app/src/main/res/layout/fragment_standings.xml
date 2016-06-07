@@ -1,20 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+<android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:id="@+id/standings_refresh"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/primary_bg">
 
-    <android.support.v4.widget.SwipeRefreshLayout
-        android:id="@+id/standings_refresh"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:clipChildren="false">
+
+        <com.plastic.bevslch.europool2016.views.BarChartView
+            android:id="@+id/bar_chart"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:layout_margin="5dp" />
 
         <android.support.v7.widget.RecyclerView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/rv"
+            android:layout_below="@+id/bar_chart"
             android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true" />
+            android:layout_alignParentStart="true"
+            android:paddingTop="5dp" />
 
         <com.plastic.bevslch.europool2016.views.LoadingOverlayView
             android:id="@+id/loading_overlay"
@@ -22,5 +32,5 @@
             android:layout_height="match_parent"
             android:visibility="gone"
             android:clickable="true" />
-    </android.support.v4.widget.SwipeRefreshLayout>
-</RelativeLayout>
+    </RelativeLayout>
+</android.support.v4.widget.SwipeRefreshLayout>

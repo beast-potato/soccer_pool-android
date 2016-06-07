@@ -8,12 +8,14 @@ public class Players {
     String name;
     String points;
     Integer position;
+    int color;
 
-    public Players(String name, String pts, Integer position)
+    public Players(String name, String pts, Integer position, int color)
     {
         this.name = name;
         this.points = pts;
         this.position = position;
+        this.color = color;
     }
 
     public String getName() {
@@ -26,5 +28,9 @@ public class Players {
 
     public Integer getPosition() {
         return position;
+    }
+
+    public int getColor() {
+        return color;
     }
 }
