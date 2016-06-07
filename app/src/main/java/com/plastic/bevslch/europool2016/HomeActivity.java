@@ -95,7 +95,6 @@ public class HomeActivity extends AppCompatActivity {
                             // do nothing
                         }
                     })
-                    .setIcon(android.R.drawable.ic_dialog_alert)
                     .show();
 
             return true;

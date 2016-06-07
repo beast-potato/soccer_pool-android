@@ -187,6 +187,17 @@ public class BarChartView extends View {
     }
 
     public void setData(List<BarItemData> data) {
+        boolean allZero = true;
+        for (BarItemData itemData : data) {
+            if (itemData.value > 0) {
+                allZero = false;
+            }
+        }
+        if (allZero) {
+            for (BarItemData itemData : data) {
+                itemData.value = 1;
+            }
+        }
         this.data = data;
         invalidate();
     }
