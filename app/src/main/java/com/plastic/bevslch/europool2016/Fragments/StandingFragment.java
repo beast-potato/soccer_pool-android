@@ -1,9 +1,11 @@
 package com.plastic.bevslch.europool2016.Fragments;
 
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -62,8 +64,8 @@ public class    StandingFragment extends Fragment {
     }
 
     private void configView() {
-        LinearLayoutManager llm = new LinearLayoutManager(getContext());
-        rv.setLayoutManager(llm);
+        GridLayoutManager glm = new GridLayoutManager(getActivity(), 3);
+        rv.setLayoutManager(glm);
         loadingOverlayView.setVisibility(View.VISIBLE);
     }
 
@@ -83,8 +85,10 @@ public class    StandingFragment extends Fragment {
                 loadingOverlayView.setVisibility(View.GONE);
                 refreshLayout.setRefreshing(false);
                 ArrayList<Players> gamePlayers = new ArrayList<Players>();
+                int i = 0;
                 for (Datum d : data.data) {
-                    gamePlayers.add(new Players(d.name, d.points.toString()));
+                    gamePlayers.add(new Players(d.name, d.points.toString(), (i+1)));
+                    i++;
                 }
                 StandingRecylcerViewAdapter standingsAdapter = new StandingRecylcerViewAdapter(gamePlayers);
                 rv.setAdapter(standingsAdapter);

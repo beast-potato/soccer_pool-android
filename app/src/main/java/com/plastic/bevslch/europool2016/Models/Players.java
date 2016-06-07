@@ -7,11 +7,13 @@ package com.plastic.bevslch.europool2016.Models;
 public class Players {
     String name;
     String points;
+    Integer position;
 
-    public Players(String name, String pts)
+    public Players(String name, String pts, Integer position)
     {
         this.name = name;
         this.points = pts;
+        this.position = position;
     }
 
     public String getName() {
@@ -20,5 +22,9 @@ public class Players {
 
     public String getPoints() {
         return points;
+    }
+
+    public Integer getPosition() {
+        return position;
     }
 }

@@ -125,6 +125,10 @@ public class LoginActivity extends AppCompatActivity{
                                     if(!data.success)
                                     {
                                         Log.d(TAG, "onResponse: YOU HAVE REACHED");
+                                        if(data.errorCode == 1)
+                                        {
+                                            mPasswordView.setError("Password is incorrect, please enter the correct password");
+                                        }
                                         if(data.errorCode == 2) {
                                             new AlertDialog.Builder(LoginActivity.this)
                                                     .setTitle("NEW USER")

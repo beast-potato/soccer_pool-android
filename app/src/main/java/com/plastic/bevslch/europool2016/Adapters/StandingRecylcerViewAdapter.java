@@ -34,6 +34,7 @@ public class StandingRecylcerViewAdapter extends RecyclerView.Adapter<StandingRe
     public void onBindViewHolder(PlayerViewHolder holder, int position) {
         holder.playerName.setText(players.get(position).getName());
         holder.playerPoints.setText(players.get(position).getPoints());
+        holder.playerPosition.setText(players.get(position).getPosition().toString());
     }
 
     @Override
@@ -50,12 +51,14 @@ public class StandingRecylcerViewAdapter extends RecyclerView.Adapter<StandingRe
         CardView cv;
         TextView playerName;
         TextView playerPoints;
+        TextView playerPosition;
 
         PlayerViewHolder(View itemView) {
             super(itemView);
             cv = (CardView) itemView.findViewById(R.id.cv);
             playerName = (TextView) itemView.findViewById(R.id.player_name);
             playerPoints = (TextView) itemView.findViewById(R.id.player_points);
+            playerPosition = (TextView) itemView.findViewById(R.id.player_position);
         }
     }
 }
