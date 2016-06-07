@@ -33,6 +33,7 @@ public class BarChartView extends View {
     private int colorGrid, colorText;
     private Paint gridPaint, textPaint, barPaint, debugPaint;
     private RectF screenRect;
+    private int selectedItem;
 
     public BarChartView(Context context) {
         super(context);
@@ -130,16 +131,26 @@ public class BarChartView extends View {
     }
 
     private void drawBars(Canvas canvas, RectF container) {
-        barPaint.setStrokeWidth(getBarWidth(container, data.size()));
+
 
         float space = container.width() / calcXAxisStep();
         float scale = getYScale(container);
         for (int i = 0; i < data.size(); i++) {
-            int item = data.get(i).value;
-            float scaledHeight = (float) item * scale;
-            float x = i * space + space / 2;
-            barPaint.setColor(data.get(i).color);
-            canvas.drawLine(container.left + x, container.bottom, container.left + x, container.bottom - (scaledHeight==0?1:scaledHeight), barPaint);
+            if (i != selectedItem) {
+                barPaint.setStrokeWidth(getBarWidth(container, data.size()));
+                int item = data.get(i).value;
+                float scaledHeight = (float) item * scale;
+                float x = i * space + space / 2;
+                barPaint.setColor(data.get(i).color);
+                canvas.drawLine(container.left + x, container.bottom, container.left + x, container.bottom - (scaledHeight == 0 ? 1 : scaledHeight), barPaint);
+            } else {
+                barPaint.setStrokeWidth(getBarWidth(container, data.size()) * 2);
+                int item = data.get(i).value;
+                float scaledHeight = (float) item * scale;
+                float x = i * space + space / 2;
+                barPaint.setColor(data.get(i).color);
+                canvas.drawLine(container.left + x, container.bottom, container.left + x, container.bottom - (scaledHeight == 0 ? 1 : scaledHeight), barPaint);
+            }
         }
     }
 
@@ -199,6 +210,11 @@ public class BarChartView extends View {
             }
         }
         this.data = data;
+        invalidate();
+    }
+
+    public void setSelectedItem(int position) {
+        selectedItem = position;
         invalidate();
     }
 

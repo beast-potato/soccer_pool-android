@@ -27,6 +27,7 @@ public class StandingRecylcerViewAdapter extends RecyclerView.Adapter<RecyclerVi
     private static final int CHART_INDEX=0;
     public static final int TYPE_CHART =0;
     public static final int TYPE_ITEM=1;
+    private int selectedItem = -1;
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if(viewType==TYPE_ITEM) {
@@ -39,14 +40,29 @@ public class StandingRecylcerViewAdapter extends RecyclerView.Adapter<RecyclerVi
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
         if(holder instanceof PlayerViewHolder) {
             PlayerViewHolder playerViewHolder = (PlayerViewHolder)holder;
+            List<Integer> colors = getColors(players.size());
             Players player = players.get(position-1);
             playerViewHolder.playerName.setText(player.getName());
+            playerViewHolder.playerName.setTextColor(colors.get(position - 1));
             playerViewHolder.playerPoints.setText(String.valueOf(player.getPoints()));
+            playerViewHolder.playerPoints.setTextColor(colors.get(position - 1));
             playerViewHolder.playerPosition.setText(String.valueOf(player.getPosition()));
-            playerViewHolder.cv.setBackgroundColor(getColors(players.size()).get(position-1));
+            playerViewHolder.playerPosition.setTextColor(colors.get(position - 1));
+            if (position - 1 == selectedItem) {
+                holder.itemView.setBackgroundResource(R.color.colorPrimaryLight);
+            } else {
+                holder.itemView.setBackgroundResource(R.color.colorTextIcons);
+            }
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    selectedItem = position - 1;
+                    notifyDataSetChanged();
+                }
+            });
         }else{
             List<Integer> colors = getColors(players.size());
             List<BarChartView.BarItemData> chartData = new ArrayList<>();
@@ -54,6 +70,8 @@ public class StandingRecylcerViewAdapter extends RecyclerView.Adapter<RecyclerVi
                 chartData.add(new BarChartView.BarItemData(players.get(i).getPoints(), colors.get(i)));
             ChartViewHolder chartViewHolder = (ChartViewHolder)holder;
             chartViewHolder.barChartView.setData(chartData);
+            ((ChartViewHolder) holder).barChartView.setSelectedItem(selectedItem);
+            holder.itemView.setOnClickListener(null);
         }
     }
 
@@ -72,12 +90,13 @@ public class StandingRecylcerViewAdapter extends RecyclerView.Adapter<RecyclerVi
         super.onAttachedToRecyclerView(recyclerView);
     }
     private List<Integer> getColors(int amount) {
-        final int lowerLimit = 0xFF151515;
-        final int upperLimit = 0xFFF0F0F0;
+        amount += 1;
+        final int lowerLimit = 0xFFFFFFFF;
+        final int upperLimit = 0xFF505050;
         final int colorStep = (upperLimit - lowerLimit) / amount;
 
         final List<Integer> colors = new ArrayList<>(amount);
-        for (int i = 0; i < amount; i++) {
+        for (int i = 1; i <= amount; i++) {
             int color = lowerLimit + colorStep * i;
             colors.add(color);
         }
