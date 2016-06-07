@@ -116,13 +116,13 @@ public class PredictionDialogFragment extends DialogFragment {
 
         Picasso.with(getActivity())
                 .load(match.homeTeam.flag)
-                .placeholder(R.drawable.spain)
+                .placeholder(R.drawable.ic_photo)
                 .fit()
                 .into(homeFlag);
 
         Picasso.with(getActivity())
                 .load(match.awayTeam.flag)
-                .placeholder(R.drawable.spain)
+                .placeholder(R.drawable.ic_photo)
                 .fit()
                 .into(awayFlag);
     }

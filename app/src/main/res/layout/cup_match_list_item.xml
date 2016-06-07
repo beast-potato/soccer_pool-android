@@ -41,7 +41,8 @@
                         android:layout_width="30dp"
                         android:layout_height="30dp"
                         android:layout_below="@id/match_home_name"
-                        android:scaleType="fitXY"/>
+                        android:scaleType="fitXY"
+                        android:src="@drawable/ic_photo" />
 
                     <TextView
                         android:id="@+id/match_home_prediction"
@@ -90,7 +91,8 @@
                         android:layout_height="30dp"
                         android:layout_below="@id/match_away_name"
                         android:layout_alignParentRight="true"
-                        android:scaleType="fitXY"/>
+                        android:scaleType="fitXY"
+                        android:src="@drawable/ic_photo" />
 
                     <TextView
                         android:id="@+id/match_away_prediction"
