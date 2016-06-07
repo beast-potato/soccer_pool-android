@@ -90,7 +90,7 @@ public class LoginActivity extends AppCompatActivity{
             public void onClick(View view) {
                 mLoginOverlay.setVisibility(View.VISIBLE);
                 if (!mEmailView.getText().toString().contains("@plasticmobile.com")) {
-                    Toast.makeText(LoginActivity.this, "Enter valid email.", Toast.LENGTH_LONG).show();
+                    mEmailView.setError("Enter a Plastic Mobile Email addess");
                 } else {
                     final LoginEndpointApiRequest loginEndpointApiRequest = new LoginEndpointApiRequest(Constants.BASE_URL, LoginActivity.this);
                     loginEndpointApiRequest.setContentType(Constants.contentTypeJson);
