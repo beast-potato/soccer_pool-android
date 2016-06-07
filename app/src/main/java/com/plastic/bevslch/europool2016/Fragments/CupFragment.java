@@ -23,7 +23,6 @@ import com.plastic.bevslch.europool2016.R;
 import com.plastic.bevslch.europool2016.endpoints.GamesEndpointApiRequest;
 import com.plastic.bevslch.europool2016.endpoints.gamesendpointresponse.Datum;
 import com.plastic.bevslch.europool2016.endpoints.gamesendpointresponse.GamesEndpointApiResponse;
-import com.plastic.bevslch.europool2016.endpoints.predictendpointresponse.PredictEndpointApiResponse;
 import com.plastic.bevslch.europool2016.views.LoadingOverlayView;
 
 import java.util.ArrayList;
