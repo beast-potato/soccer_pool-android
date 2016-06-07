@@ -39,6 +39,7 @@ public class    StandingFragment extends Fragment {
     private LoadingOverlayView loadingOverlayView;
     private RecyclerView rv;
     private BarChartView barChartView;
+    private View errorOverlay;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -55,6 +56,7 @@ public class    StandingFragment extends Fragment {
         loadingOverlayView = (LoadingOverlayView) fragmentView.findViewById(R.id.loading_overlay);
         refreshLayout = (SwipeRefreshLayout) fragmentView.findViewById(R.id.standings_refresh);
         barChartView = (BarChartView) fragmentView.findViewById(R.id.bar_chart);
+        errorOverlay = fragmentView.findViewById(R.id.error_overlay);
     }
 
     private void initListeners() {
@@ -87,19 +89,24 @@ public class    StandingFragment extends Fragment {
             @Override
             public void onResponse(PoolEndpointApiResponse data) {
                 Log.i(TAG, "Standings api call status success: " + data.success);
+                errorOverlay.setVisibility(View.VISIBLE);
                 loadingOverlayView.setVisibility(View.GONE);
                 refreshLayout.setRefreshing(false);
-                ArrayList<Players> gamePlayers = new ArrayList<Players>();
-                List<BarChartView.BarItemData> chartData = new ArrayList<>();
-                List<Integer> colors = getColors(data.data.size());
-                for (int i = 0; i < data.data.size(); i++) {
-                    Datum d = data.data.get(i);
-                    gamePlayers.add(new Players(d.name, d.points.toString(), (i + 1), colors.get(i)));
-                    chartData.add(new BarChartView.BarItemData(d.points.intValue(), colors.get(i)));
+                if (data != null && data.data != null) {
+                    ArrayList<Players> gamePlayers = new ArrayList<Players>();
+                    List<BarChartView.BarItemData> chartData = new ArrayList<>();
+                    List<Integer> colors = getColors(data.data.size());
+                    for (int i = 0; i < data.data.size(); i++) {
+                        Datum d = data.data.get(i);
+                        gamePlayers.add(new Players(d.name, d.points.toString(), (i + 1), colors.get(i)));
+                        chartData.add(new BarChartView.BarItemData(d.points.intValue(), colors.get(i)));
+                    }
+                    StandingRecylcerViewAdapter standingsAdapter = new StandingRecylcerViewAdapter(gamePlayers);
+                    rv.setAdapter(standingsAdapter);
+                    barChartView.setData(chartData);
+                } else {
+                    errorOverlay.setVisibility(View.VISIBLE);
                 }
-                StandingRecylcerViewAdapter standingsAdapter = new StandingRecylcerViewAdapter(gamePlayers);
-                rv.setAdapter(standingsAdapter);
-                barChartView.setData(chartData);
             }
 
             @Override
@@ -107,6 +114,7 @@ public class    StandingFragment extends Fragment {
                 Log.i(TAG, "error:" + error.networkResponse.statusCode);
                 loadingOverlayView.setVisibility(View.GONE);
                 refreshLayout.setRefreshing(false);
+                errorOverlay.setVisibility(View.VISIBLE);
             }
         });
     }
