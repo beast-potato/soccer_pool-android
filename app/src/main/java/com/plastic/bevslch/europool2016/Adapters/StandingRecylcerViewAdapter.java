@@ -59,7 +59,11 @@ public class StandingRecylcerViewAdapter extends RecyclerView.Adapter<RecyclerVi
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    selectedItem = position - 1;
+                    if (selectedItem != position - 1) {
+                        selectedItem = position - 1;
+                    } else {
+                        selectedItem = -1;
+                    }
                     notifyDataSetChanged();
                 }
             });
