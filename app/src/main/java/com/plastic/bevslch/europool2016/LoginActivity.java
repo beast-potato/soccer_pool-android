@@ -109,7 +109,7 @@ public class LoginActivity extends AppCompatActivity{
             loginEndpointApiRequest.setContentType(Constants.contentTypeJson);
             loginEndpointApiRequest.setEmail(mEmailView.getText().toString());
             loginEndpointApiRequest.setPassword(mPasswordView.getText().toString());
-            loginEndpointApiRequest.setSignup(String.valueOf(signup));
+            loginEndpointApiRequest.setSignup(signup?String.valueOf(signup):null);
             List<LoginEndpointApiRequest.Fields> invalidFieldsList = loginEndpointApiRequest.validateFields();
             if (invalidFieldsList.size() > 0) {
                 for (LoginEndpointApiRequest.Fields field : invalidFieldsList) {
@@ -159,7 +159,7 @@ public class LoginActivity extends AppCompatActivity{
                                 }
                             }
                         } else {
-                            Toast.makeText(LoginActivity.this, data.errorMessage, Toast.LENGTH_LONG).show();
+                            Toast.makeText(LoginActivity.this, "Error:"+data.errorMessage, Toast.LENGTH_LONG).show();
                         }
 
                     }
