@@ -1,8 +1,9 @@
 package com.plastic.bevslch.europool2016;
 
-import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -20,6 +21,7 @@ import com.beastpotato.potato.api.net.ApiRequest;
 import com.plastic.bevslch.europool2016.Helpers.PreffHelper;
 import com.plastic.bevslch.europool2016.endpoints.LoginEndpointApiRequest;
 import com.plastic.bevslch.europool2016.endpoints.loginendpointresponse.LoginEndpointApiResponse;
+import com.plastic.bevslch.europool2016.views.LoadingOverlayView;
 
 import java.util.List;
 
@@ -47,7 +49,9 @@ public class LoginActivity extends AppCompatActivity{
     private AutoCompleteTextView mEmailView;
     private EditText mPasswordView;
     private Button mEmailSignInButton;
-    private ProgressDialog dialog;
+    private LoadingOverlayView mLoginOverlay;
+    private Boolean memailConfirmed;
+    private Boolean mdialogClick;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +69,9 @@ public class LoginActivity extends AppCompatActivity{
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
         mPasswordView = (EditText) findViewById(R.id.password);
         mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
+        mLoginOverlay = (LoadingOverlayView) findViewById(R.id.login_overlay);
+        memailConfirmed = false;
+        mdialogClick = false;
     }
 
     private void setListeners() {
@@ -81,53 +88,113 @@ public class LoginActivity extends AppCompatActivity{
         mEmailSignInButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                dialog = ProgressDialog.show(LoginActivity.this, "", "Logging you in. Please wait...", true);
-                LoginEndpointApiRequest loginEndpointApiRequest = new LoginEndpointApiRequest(Constants.BASE_URL, LoginActivity.this);
-                loginEndpointApiRequest.setContentType(Constants.contentTypeJson);
-                loginEndpointApiRequest.setEmail(mEmailView.getText().toString());
-                loginEndpointApiRequest.setPassword(mPasswordView.getText().toString());
-                List<LoginEndpointApiRequest.Fields> invalidFieldsList = loginEndpointApiRequest.validateFields();
-                if (invalidFieldsList.size() > 0) {
-                    for (LoginEndpointApiRequest.Fields field : invalidFieldsList) {
-                        switch (field) {
-                            case email:
-                                Toast.makeText(LoginActivity.this, "Enter valid email.", Toast.LENGTH_LONG).show();
-                                break;
-                            case password:
-                                Toast.makeText(LoginActivity.this, "Enter valid email.", Toast.LENGTH_LONG).show();
-                                break;
-                            case contentType:
-                                break;
-                        }
-                    }
+                mLoginOverlay.setVisibility(View.VISIBLE);
+                if (!mEmailView.getText().toString().contains("@plasticmobile.com")) {
+                    mEmailView.setError("Enter a Plastic Mobile Email addess");
                 } else {
-                    Log.i(TAG, "will send request to url: " + loginEndpointApiRequest.getFullUrl());
-                    loginEndpointApiRequest.send(new ApiRequest.RequestCompletion<LoginEndpointApiResponse>() {
-                        @Override
-                        public void onResponse(LoginEndpointApiResponse data) {
-                            dialog.dismiss();
-                            if (data != null && data.success) {
-                                PreffHelper.getInstance().setEmail(mEmailView.getText().toString());
-                                PreffHelper.getInstance().setToken(data.token);
-                                startActivity(new Intent(LoginActivity.this, HomeActivity.class));
-                            } else {
-                                Toast.makeText(LoginActivity.this, data.errorMessage, Toast.LENGTH_LONG).show();
+                    final LoginEndpointApiRequest loginEndpointApiRequest = new LoginEndpointApiRequest(Constants.BASE_URL, LoginActivity.this);
+                    loginEndpointApiRequest.setContentType(Constants.contentTypeJson);
+                    loginEndpointApiRequest.setEmail(mEmailView.getText().toString());
+                    loginEndpointApiRequest.setPassword(mPasswordView.getText().toString());
+                    List<LoginEndpointApiRequest.Fields> invalidFieldsList = loginEndpointApiRequest.validateFields();
+                    if (invalidFieldsList.size() > 0) {
+                        for (LoginEndpointApiRequest.Fields field : invalidFieldsList) {
+                            switch (field) {
+                                case email:
+                                    Toast.makeText(LoginActivity.this, "Enter valid email.", Toast.LENGTH_LONG).show();
+                                    break;
+                                case password:
+                                    Toast.makeText(LoginActivity.this, "Enter valid email.", Toast.LENGTH_LONG).show();
+                                    break;
+                                case contentType:
+                                    break;
                             }
                         }
+                    } else {
+                        Log.i(TAG, "will send request to url: " + loginEndpointApiRequest.getFullUrl());
+                        loginEndpointApiRequest.send(new ApiRequest.RequestCompletion<LoginEndpointApiResponse>() {
+                            @Override
+                            public void onResponse(LoginEndpointApiResponse data) {
+                                mLoginOverlay.setVisibility(View.GONE);
+                                if (data != null) {
+                                    if(data.success){
+                                    PreffHelper.getInstance().setEmail(mEmailView.getText().toString());
+                                    PreffHelper.getInstance().setToken(data.token);
+                                    startActivity(new Intent(LoginActivity.this, HomeActivity.class));
+                                    }
+                                    if(!data.success)
+                                    {
+                                        Log.d(TAG, "onResponse: YOU HAVE REACHED");
+                                        if(data.errorCode == 1)
+                                        {
+                                            mPasswordView.setError("Password is incorrect, please enter the correct password");
+                                        }
+                                        if(data.errorCode == 2) {
+                                            new AlertDialog.Builder(LoginActivity.this)
+                                                    .setTitle("Create User")
+                                                    .setMessage("Do you wish to create a new account for the EURO 2016 Pool?")
+                                                    .setPositiveButton("Create", new DialogInterface.OnClickListener() {
+                                                        public void onClick(DialogInterface dialog, int which) {
+                                                            loginEndpointApiRequest.setSignup("true");
+                                                            loginEndpointApiRequest.send(new ApiRequest.RequestCompletion<LoginEndpointApiResponse>() {
+                                                                @Override
+                                                                public void onResponse(LoginEndpointApiResponse data) {
+                                                                    if (data != null) {
+                                                                        if (data.success) {
+                                                                            PreffHelper.getInstance().setEmail(mEmailView.getText().toString());
+                                                                            PreffHelper.getInstance().setToken(data.token);
+                                                                            startActivity(new Intent(LoginActivity.this, HomeActivity.class));
+                                                                        } else {
+                                                                            Toast.makeText(LoginActivity.this, data.errorMessage, Toast.LENGTH_LONG).show();
+                                                                        }
+                                                                    }
+                                                                }
 
-                        @Override
-                        public void onError(VolleyError error) {
-                            dialog.dismiss();
-                            StringBuilder builder = new StringBuilder("Error:");
-                            if (error.networkResponse != null)
-                                builder.append(error.networkResponse.statusCode);
-                            if (error.getMessage() != null)
-                                builder.append(" - " + error.getMessage());
-                            Toast.makeText(LoginActivity.this, builder.toString(), Toast.LENGTH_LONG).show();
-                            if (error.networkResponse != null)
-                                Log.e(TAG, "Error:" + new String(error.networkResponse.data));
-                        }
-                    });
+                                                                @Override
+                                                                public void onError(VolleyError error) {
+                                                                    mLoginOverlay.setVisibility(View.GONE);
+                                                                    StringBuilder builder = new StringBuilder("Error:");
+                                                                    if (error.networkResponse != null)
+                                                                        builder.append(error.networkResponse.statusCode);
+                                                                    if (error.getMessage() != null)
+                                                                        builder.append(" - " + error.getMessage());
+                                                                    Toast.makeText(LoginActivity.this, builder.toString(), Toast.LENGTH_LONG).show();
+                                                                    if (error.networkResponse != null)
+                                                                        Log.e(TAG, "Error:" + new String(error.networkResponse.data));
+
+                                                                }
+                                                            });
+                                                        }
+                                                    })
+                                                    .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                                                        public void onClick(DialogInterface dialog, int which) {
+                                                            // do nothing
+                                                        }
+                                                    })
+                                                    .setIcon(android.R.drawable.ic_dialog_alert)
+                                                    .show();
+                                        }
+                                    }
+                                } else {
+                                    Toast.makeText(LoginActivity.this, data.errorMessage, Toast.LENGTH_LONG).show();
+                                }
+
+                            }
+
+                            @Override
+                            public void onError(VolleyError error) {
+                                mLoginOverlay.setVisibility(View.GONE);
+                                StringBuilder builder = new StringBuilder("Error:");
+                                if (error.networkResponse != null)
+                                    builder.append(error.networkResponse.statusCode);
+                                if (error.getMessage() != null)
+                                    builder.append(" - " + error.getMessage());
+                                Toast.makeText(LoginActivity.this, builder.toString(), Toast.LENGTH_LONG).show();
+                                if (error.networkResponse != null)
+                                    Log.e(TAG, "Error:" + new String(error.networkResponse.data));
+                            }
+                        });
+                    }
                 }
             }
         });

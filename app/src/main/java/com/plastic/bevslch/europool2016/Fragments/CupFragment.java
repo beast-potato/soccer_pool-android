@@ -23,6 +23,8 @@ import com.plastic.bevslch.europool2016.R;
 import com.plastic.bevslch.europool2016.endpoints.GamesEndpointApiRequest;
 import com.plastic.bevslch.europool2016.endpoints.gamesendpointresponse.Datum;
 import com.plastic.bevslch.europool2016.endpoints.gamesendpointresponse.GamesEndpointApiResponse;
+import com.plastic.bevslch.europool2016.endpoints.predictendpointresponse.PredictEndpointApiResponse;
+import com.plastic.bevslch.europool2016.views.LoadingOverlayView;
 
 import java.util.ArrayList;
 
@@ -39,6 +41,7 @@ public class CupFragment extends Fragment implements CupMatchAdapter.CupMatchCli
     private SwipeRefreshLayout refreshLayout;
     private RecyclerView upcomingList, completedList, progressList;
     private TextView upcomingEmpty, completedEmpty, progressEmpty;
+    private LoadingOverlayView loadingOverlayView;
 
     // Adapters
     private CupMatchAdapter upcomingAdapter, completedAdapter, progressAdapter;
@@ -62,7 +65,6 @@ public class CupFragment extends Fragment implements CupMatchAdapter.CupMatchCli
                              Bundle savedInstanceState) {
 
         fragmentView = inflater.inflate(R.layout.fragment_cup, container, false);
-
         initView();
         initListeners();
         configView();
@@ -84,10 +86,10 @@ public class CupFragment extends Fragment implements CupMatchAdapter.CupMatchCli
         upcomingEmpty = (TextView) fragmentView.findViewById(R.id.cup_upcoming_empty);
         completedEmpty = (TextView) fragmentView.findViewById(R.id.cup_completed_empty);
         progressEmpty = (TextView) fragmentView.findViewById(R.id.cup_progress_empty);
+        loadingOverlayView = (LoadingOverlayView) fragmentView.findViewById(R.id.loading_overlay);
     }
 
     private void initListeners() {
-
         refreshLayout.setOnRefreshListener(
                 new SwipeRefreshLayout.OnRefreshListener() {
                     @Override
@@ -108,6 +110,7 @@ public class CupFragment extends Fragment implements CupMatchAdapter.CupMatchCli
         upcomingList.setAdapter(upcomingAdapter);
         completedList.setAdapter(completedAdapter);
         progressList.setAdapter(progressAdapter);
+        loadingOverlayView.setVisibility(View.VISIBLE);
     }
 
     private void refreshLists() {
@@ -147,6 +150,7 @@ public class CupFragment extends Fragment implements CupMatchAdapter.CupMatchCli
             @Override
             public void onResponse(GamesEndpointApiResponse games) {
                 Log.i(TAG, "success:" + games.success);
+                loadingOverlayView.setVisibility(View.GONE);
                 refreshLayout.setRefreshing(false);
 
                 if (games.success) {
@@ -179,6 +183,7 @@ public class CupFragment extends Fragment implements CupMatchAdapter.CupMatchCli
             public void onError(VolleyError error) {
                 Log.e(TAG, "error" + error.getMessage());
                 Toast.makeText(getActivity(), "Error retrieving matches", Toast.LENGTH_SHORT).show();
+                loadingOverlayView.setVisibility(View.GONE);
                 refreshLayout.setRefreshing(false);
             }
         });

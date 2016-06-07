@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <ImageView
+        android:id="@+id/loader_background_image"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/soccer_net"
+        android:scaleType="centerCrop" />
+
+    <ImageView
+        android:id="@+id/loader_spinner_image"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:src="@drawable/ball"
+        android:layout_centerInParent="true" />
+</merge>
