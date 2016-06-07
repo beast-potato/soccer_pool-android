@@ -131,9 +131,9 @@ public class LoginActivity extends AppCompatActivity{
                                         }
                                         if(data.errorCode == 2) {
                                             new AlertDialog.Builder(LoginActivity.this)
-                                                    .setTitle("NEW USER")
+                                                    .setTitle("Create User")
                                                     .setMessage("Do you wish to create a new account for the EURO 2016 Pool?")
-                                                    .setPositiveButton("CREATE USER", new DialogInterface.OnClickListener() {
+                                                    .setPositiveButton("Create", new DialogInterface.OnClickListener() {
                                                         public void onClick(DialogInterface dialog, int which) {
                                                             loginEndpointApiRequest.setSignup("true");
                                                             loginEndpointApiRequest.send(new ApiRequest.RequestCompletion<LoginEndpointApiResponse>() {
@@ -166,7 +166,7 @@ public class LoginActivity extends AppCompatActivity{
                                                             });
                                                         }
                                                     })
-                                                    .setNegativeButton("CANCEL USER", new DialogInterface.OnClickListener() {
+                                                    .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                                                         public void onClick(DialogInterface dialog, int which) {
                                                             // do nothing
                                                         }
