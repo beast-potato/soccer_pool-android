@@ -9,7 +9,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.plastic.bevslch.europool2016.Helpers.Utilities;
-import com.plastic.bevslch.europool2016.Models.Fixture;
 import com.plastic.bevslch.europool2016.R;
 import com.plastic.bevslch.europool2016.endpoints.gamesendpointresponse.Datum;
 import com.squareup.picasso.Picasso;

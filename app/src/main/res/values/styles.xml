@@ -40,4 +40,14 @@
         <item name="android:layout_margin">10dp</item>
     </style>
 
+    <style name="PredictionDialogScore">
+        <item name="android:textSize">35sp</item>
+        <item name="android:textColor">@color/colorPrimaryText</item>
+        <item name="android:hint">@string/prediction_dialog_score_hint</item>
+        <item name="android:inputType">numberDecimal</item>
+        <item name="android:digits">0123456789</item>
+        <item name="android:maxLength">2</item>
+        <item name="android:layout_margin">10dp</item>
+    </style>
+
 </resources>
