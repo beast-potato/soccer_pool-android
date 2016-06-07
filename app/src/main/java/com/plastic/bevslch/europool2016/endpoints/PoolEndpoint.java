@@ -11,4 +11,6 @@ import com.beastpotato.potato.api.HeaderParam;
 public abstract class PoolEndpoint {
     @HeaderParam("Content-Type")
     String contentType;
+    @HeaderParam("token")
+    String token;
 }

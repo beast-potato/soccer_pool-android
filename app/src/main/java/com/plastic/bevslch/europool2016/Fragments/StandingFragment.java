@@ -16,6 +16,7 @@ import com.android.volley.VolleyError;
 import com.beastpotato.potato.api.net.ApiRequest;
 import com.plastic.bevslch.europool2016.Adapters.StandingRecylcerViewAdapter;
 import com.plastic.bevslch.europool2016.Constants;
+import com.plastic.bevslch.europool2016.Helpers.PreffHelper;
 import com.plastic.bevslch.europool2016.Models.Players;
 import com.plastic.bevslch.europool2016.R;
 import com.plastic.bevslch.europool2016.endpoints.PoolEndpointApiRequest;
@@ -85,15 +86,16 @@ public class    StandingFragment extends Fragment {
     private void loadStandings() {
         PoolEndpointApiRequest poolRequest = new PoolEndpointApiRequest(Constants.BASE_URL, getActivity());
         poolRequest.setContentType(Constants.contentTypeJson);
+        poolRequest.setToken(PreffHelper.getInstance().getToken());
         poolRequest.send(new ApiRequest.RequestCompletion<PoolEndpointApiResponse>() {
             @Override
             public void onResponse(PoolEndpointApiResponse data) {
                 Log.i(TAG, "Standings api call status success: " + data.success);
-                errorOverlay.setVisibility(View.VISIBLE);
+                errorOverlay.setVisibility(View.GONE);
                 loadingOverlayView.setVisibility(View.GONE);
                 refreshLayout.setRefreshing(false);
                 if (data != null && data.data != null) {
-                    ArrayList<Players> gamePlayers = new ArrayList<Players>();
+                    ArrayList<Players> gamePlayers = new ArrayList<>();
                     List<BarChartView.BarItemData> chartData = new ArrayList<>();
                     List<Integer> colors = getColors(data.data.size());
                     for (int i = 0; i < data.data.size(); i++) {
