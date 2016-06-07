@@ -6,31 +6,25 @@ package com.plastic.bevslch.europool2016.Models;
 
 public class Players {
     String name;
-    String points;
-    Integer position;
-    int color;
+    int points;
+    int position;
 
-    public Players(String name, String pts, Integer position, int color)
+    public Players(String name, int pts, int position)
     {
         this.name = name;
         this.points = pts;
         this.position = position;
-        this.color = color;
     }
 
     public String getName() {
         return name;
     }
 
-    public String getPoints() {
+    public int getPoints() {
         return points;
     }
 
-    public Integer getPosition() {
+    public int getPosition() {
         return position;
-    }
-
-    public int getColor() {
-        return color;
     }
 }

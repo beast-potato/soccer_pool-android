@@ -11,17 +11,10 @@
         android:layout_height="match_parent"
         android:clipChildren="false">
 
-        <com.plastic.bevslch.europool2016.views.BarChartView
-            android:id="@+id/bar_chart"
-            android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:layout_margin="5dp" />
-
         <android.support.v7.widget.RecyclerView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/rv"
-            android:layout_below="@+id/bar_chart"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:paddingTop="5dp" />

@@ -32,15 +32,15 @@ import java.util.List;
  * Created by sjsaldanha on 2016-06-01.
  */
 
-public class    StandingFragment extends Fragment {
+public class StandingFragment extends Fragment {
     private static final String TAG = "StandingFragment";
 
     private View fragmentView;
     private SwipeRefreshLayout refreshLayout;
     private LoadingOverlayView loadingOverlayView;
     private RecyclerView rv;
-    private BarChartView barChartView;
     private View errorOverlay;
+    private StandingRecylcerViewAdapter standingRecylcerViewAdapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -56,7 +56,6 @@ public class    StandingFragment extends Fragment {
         rv = (RecyclerView) fragmentView.findViewById(R.id.rv);
         loadingOverlayView = (LoadingOverlayView) fragmentView.findViewById(R.id.loading_overlay);
         refreshLayout = (SwipeRefreshLayout) fragmentView.findViewById(R.id.standings_refresh);
-        barChartView = (BarChartView) fragmentView.findViewById(R.id.bar_chart);
         errorOverlay = fragmentView.findViewById(R.id.error_overlay);
     }
 
@@ -74,6 +73,19 @@ public class    StandingFragment extends Fragment {
         rv.setLayoutManager(llm);
         loadingOverlayView.setVisibility(View.VISIBLE);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 3);
+        gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+            @Override
+            public int getSpanSize(int position) {
+                switch(standingRecylcerViewAdapter.getItemViewType(position)){
+                    case StandingRecylcerViewAdapter.TYPE_CHART:
+                        return 3;
+                    case StandingRecylcerViewAdapter.TYPE_ITEM:
+                        return 1;
+                    default:
+                        return 0;
+                }
+            }
+        });
         rv.setLayoutManager(gridLayoutManager);
     }
 
@@ -96,16 +108,12 @@ public class    StandingFragment extends Fragment {
                 refreshLayout.setRefreshing(false);
                 if (data != null && data.data != null) {
                     ArrayList<Players> gamePlayers = new ArrayList<>();
-                    List<BarChartView.BarItemData> chartData = new ArrayList<>();
-                    List<Integer> colors = getColors(data.data.size());
                     for (int i = 0; i < data.data.size(); i++) {
                         Datum d = data.data.get(i);
-                        gamePlayers.add(new Players(d.name, d.points.toString(), (i + 1), colors.get(i)));
-                        chartData.add(new BarChartView.BarItemData(d.points.intValue(), colors.get(i)));
+                        gamePlayers.add(new Players(d.name, d.points.intValue(), (i + 1)));
                     }
-                    StandingRecylcerViewAdapter standingsAdapter = new StandingRecylcerViewAdapter(gamePlayers);
-                    rv.setAdapter(standingsAdapter);
-                    barChartView.setData(chartData);
+                    standingRecylcerViewAdapter = new StandingRecylcerViewAdapter(gamePlayers);
+                    rv.setAdapter(standingRecylcerViewAdapter);
                 } else {
                     errorOverlay.setVisibility(View.VISIBLE);
                 }
@@ -121,16 +129,5 @@ public class    StandingFragment extends Fragment {
         });
     }
 
-    List<Integer> getColors(int amount) {
-        final int lowerLimit = 0xFF151515;
-        final int upperLimit = 0xFFF0F0F0;
-        final int colorStep = (upperLimit - lowerLimit) / amount;
 
-        final List<Integer> colors = new ArrayList<>(amount);
-        for (int i = 0; i < amount; i++) {
-            int color = lowerLimit + colorStep * i;
-            colors.add(color);
-        }
-        return colors;
-    }
 }

@@ -139,7 +139,7 @@ public class BarChartView extends View {
             float scaledHeight = (float) item * scale;
             float x = i * space + space / 2;
             barPaint.setColor(data.get(i).color);
-            canvas.drawLine(container.left + x, container.bottom, container.left + x, container.bottom - scaledHeight, barPaint);
+            canvas.drawLine(container.left + x, container.bottom, container.left + x, container.bottom - (scaledHeight==0?1:scaledHeight), barPaint);
         }
     }
 
