@@ -53,29 +53,35 @@ public class CupMatchAdapter extends RecyclerView.Adapter<CupMatchAdapter.Fixtur
     public void onBindViewHolder(CupMatchAdapter.FixtureViewHolder holder, int position) {
         holder.homeName.setText(fixtures.get(position).homeTeam.name);
         holder.awayName.setText(fixtures.get(position).awayTeam.name);
-        holder.homePrediction.setText(String.valueOf(fixtures.get(position).prediction.homeGoals));
-        holder.awayPrediction.setText(String.valueOf(fixtures.get(position).prediction.awayGoals));
+
+        if (fixtures.get(position).hasBeenPredicted) {
+            holder.homePrediction.setText(String.valueOf(fixtures.get(position).prediction.homeGoals));
+            holder.awayPrediction.setText(String.valueOf(fixtures.get(position).prediction.awayGoals));
+        } else {
+            holder.homePrediction.setText("-");
+            holder.awayPrediction.setText("-");
+        }
 
         if (type == MATCH_TYPE.UPCOMING || type == MATCH_TYPE.PROGRESS) {
-            holder.homeScore.setVisibility(View.GONE);
-            holder.awayScore.setVisibility(View.GONE);
-            holder.matchStartTime.setText(Utilities.formatDate(fixtures.get(position).startTime));
+            holder.finalScore.setVisibility(View.GONE);
+            if (type == MATCH_TYPE.UPCOMING) {
+                holder.matchStartTime.setText(Utilities.formatDate(fixtures.get(position).startTime));
+            } else {
+                holder.matchStartTime.setVisibility(View.GONE);
+            }
         } else {
-            holder.homeScore.setText(String.valueOf(fixtures.get(position).homeGoals));
-            holder.awayScore.setText(String.valueOf(fixtures.get(position).awayGoals));
+            holder.finalScore.setText(context.getString(R.string.cup_match_final, fixtures.get(position).homeGoals, fixtures.get(position).awayGoals));
             holder.matchStartTime.setVisibility(View.GONE);
         }
 
         Picasso.with(context)
-                .load(fixtures.get(position).homeTeam.flag)
+                .load(fixtures.get(position).homeTeam.image)
                 .placeholder(R.drawable.ic_photo)
-                .fit()
                 .into(holder.homeFlag);
 
         Picasso.with(context)
-                .load(fixtures.get(position).awayTeam.flag)
+                .load(fixtures.get(position).awayTeam.image)
                 .placeholder(R.drawable.ic_photo)
-                .fit()
                 .into(holder.awayFlag);
     }
     @Override
@@ -105,15 +111,14 @@ public class CupMatchAdapter extends RecyclerView.Adapter<CupMatchAdapter.Fixtur
     }
 
     public static class FixtureViewHolder extends RecyclerView.ViewHolder {
-        TextView homeName, awayName, homeScore, awayScore, homePrediction, awayPrediction, matchStartTime;
+        TextView homeName, awayName, finalScore, homePrediction, awayPrediction, matchStartTime;
         ImageView homeFlag, awayFlag;
 
         FixtureViewHolder(View itemView, final CupMatchClickListener listener) {
             super(itemView);
             homeName = (TextView) itemView.findViewById(R.id.match_home_name);
             awayName = (TextView) itemView.findViewById(R.id.match_away_name);
-            homeScore = (TextView) itemView.findViewById(R.id.match_home_score);
-            awayScore = (TextView) itemView.findViewById(R.id.match_away_score);
+            finalScore = (TextView) itemView.findViewById(R.id.match_final_score);
             homePrediction = (TextView) itemView.findViewById(R.id.match_home_prediction);
             awayPrediction = (TextView) itemView.findViewById(R.id.match_away_prediction);
             homeFlag = (ImageView) itemView.findViewById(R.id.match_home_flag);

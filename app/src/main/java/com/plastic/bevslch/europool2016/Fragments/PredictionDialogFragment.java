@@ -111,19 +111,19 @@ public class PredictionDialogFragment extends DialogFragment {
         homeName.setText(match.homeTeam.name);
         awayName.setText(match.awayTeam.name);
 
-        homeScore.setText(String.valueOf(match.prediction.homeGoals));
-        awayScore.setText(String.valueOf(match.prediction.awayGoals));
+        if (match.hasBeenPredicted) {
+            homeScore.setText(String.valueOf(match.prediction.homeGoals));
+            awayScore.setText(String.valueOf(match.prediction.awayGoals));
+        }
 
         Picasso.with(getActivity())
-                .load(match.homeTeam.flag)
+                .load(match.homeTeam.image)
                 .placeholder(R.drawable.ic_photo)
-                .fit()
                 .into(homeFlag);
 
         Picasso.with(getActivity())
-                .load(match.awayTeam.flag)
+                .load(match.awayTeam.image)
                 .placeholder(R.drawable.ic_photo)
-                .fit()
                 .into(awayFlag);
     }
 

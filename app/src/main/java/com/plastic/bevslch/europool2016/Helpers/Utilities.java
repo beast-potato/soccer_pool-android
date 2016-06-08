@@ -1,10 +1,7 @@
 package com.plastic.bevslch.europool2016.Helpers;
 
-import android.util.Log;
-
 import com.plastic.bevslch.europool2016.Constants;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -17,43 +14,25 @@ public class Utilities {
 
     private static final String TAG = Utilities.class.getSimpleName();
 
-    public static boolean isBeforeNow(String date) {
+    public static boolean isBeforeNow(Long date) {
         Date now = new Date();
-        SimpleDateFormat format = new SimpleDateFormat(Constants.serverDatePattern, Locale.CANADA);
-        try {
-            Date otherDate = format.parse(date);
-            return otherDate.before(now);
-        } catch (ParseException e) {
-            Log.e(TAG, "Error parsing date: " + date);
-            return false;
-        }
+        Date otherDate = new Date(date * 1000);
+        return otherDate.before(now);
     }
 
     // We only check this if the start time is before now (starttime + avg duration > now, inprogress = true)
-    public static boolean isMatchInProgress(String date) {
+    public static boolean isMatchInProgress(Long date) {
         Date now = new Date();
-        SimpleDateFormat format = new SimpleDateFormat(Constants.serverDatePattern, Locale.CANADA);
-        try {
-            Date otherDate = format.parse(date);
-            Calendar cal = Calendar.getInstance();
-            cal.setTime(otherDate);
-            cal.add(Calendar.MINUTE, Constants.matchAverageDuration);
-            return otherDate.after(now);
-        } catch (ParseException e) {
-            Log.e(TAG, "Error parsing date: " + date);
-            return false;
-        }
+        Date otherDate = new Date(date * 1000);
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(otherDate);
+        cal.add(Calendar.MINUTE, Constants.matchAverageDuration);
+        return otherDate.after(now);
     }
 
-    public static String formatDate(String date) {
-        SimpleDateFormat formatServer = new SimpleDateFormat(Constants.serverDatePattern, Locale.CANADA);
+    public static String formatDate(Long date) {
         SimpleDateFormat formatUI = new SimpleDateFormat(Constants.uiDatePattern, Locale.CANADA);
-        try {
-            Date dateObj = formatServer.parse(date);
-            return formatUI.format(dateObj);
-        } catch (ParseException e) {
-            Log.e(TAG, "Error parsing date: " + date);
-            return date;
-        }
+        Date dateObj = new Date(date * 1000);
+        return formatUI.format(dateObj);
     }
 }

@@ -52,6 +52,11 @@
         <item name="android:textColor">@color/colorAccent</item>
     </style>
 
+    <style name="CupMatchFinal">
+        <item name="android:textSize">13sp</item>
+        <item name="android:textColor">@color/colorSecondaryText</item>
+    </style>
+
     <style name="CupMatchScore">
         <item name="android:textSize">15sp</item>
         <item name="android:textColor">@color/colorSecondaryText</item>

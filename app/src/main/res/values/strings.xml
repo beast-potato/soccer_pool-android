@@ -18,6 +18,7 @@
     <string name="cup_completed_title">Completed games</string>
     <string name="cup_progress_title">In progress games</string>
     <string name="cup_match_vs">VS</string>
+    <string name="cup_match_final">Final: %1$d - %2$d</string>
     <!--Standings-->
     <string name="no_standings">No Standings</string>
     <string name="cup_list_empty">No matches yet.</string>

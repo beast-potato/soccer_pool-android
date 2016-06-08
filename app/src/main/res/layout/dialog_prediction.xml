@@ -27,7 +27,7 @@
                 android:id="@+id/prediction_flag_home"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
-                android:scaleType="fitXY"/>
+                android:scaleType="fitCenter"/>
 
         </LinearLayout>
 
@@ -51,7 +51,7 @@
                 android:id="@+id/prediction_flag_away"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
-                android:scaleType="fitXY"/>
+                android:scaleType="fitCenter"/>
 
         </LinearLayout>
 

@@ -209,6 +209,7 @@ public class CupFragment extends Fragment implements CupMatchAdapter.CupMatchCli
         Datum match = upcomingGames.get(position);
         match.prediction.homeGoals = (long)homeScore;
         match.prediction.awayGoals = (long)awayScore;
+        match.hasBeenPredicted = true;
         upcomingAdapter.notifyDataSetChanged();
         Toast.makeText(getActivity(), "Prediction made", Toast.LENGTH_SHORT).show();
     }
