@@ -81,6 +81,11 @@ public class LoginActivity extends AppCompatActivity{
                 if (id == R.id.login || id == EditorInfo.IME_NULL) {
                     return true;
                 }
+                if ((keyEvent != null && (keyEvent.getKeyCode() == KeyEvent.KEYCODE_ENTER)) || (id == EditorInfo.IME_ACTION_DONE)) {
+                    Log.i(TAG,"Enter pressed");
+                    makeLoginCall(false);
+                    return true;
+                }
                 return false;
             }
         });
@@ -91,6 +96,19 @@ public class LoginActivity extends AppCompatActivity{
                 makeLoginCall(false);
             }
         });
+
+        mEmailView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if ((event != null && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) || (actionId == EditorInfo.IME_ACTION_DONE)) {
+                    Log.i(TAG,"Enter pressed");
+                    makeLoginCall(false);
+                    return true;
+                }
+                return false;
+            }
+        });
+
     }
 
     private void configView() {
