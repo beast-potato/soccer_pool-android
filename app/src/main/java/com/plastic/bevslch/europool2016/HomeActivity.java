@@ -12,15 +12,25 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.Html;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.plastic.bevslch.europool2016.Adapters.HelperAsyncTask;
 import com.plastic.bevslch.europool2016.Fragments.CupFragment;
 import com.plastic.bevslch.europool2016.Fragments.StandingFragment;
 import com.plastic.bevslch.europool2016.Helpers.PreffHelper;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 public class HomeActivity extends AppCompatActivity {
 
@@ -99,6 +109,31 @@ public class HomeActivity extends AppCompatActivity {
 
             return true;
         }
+        if(id == R.id.action_help)
+        {
+            String urlSource ="";
+            HelperAsyncTask helpTask = new HelperAsyncTask();
+            try {
+                urlSource = helpTask.execute("http://104.131.118.14/info").get();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            }
+
+            new AlertDialog.Builder(this)
+                    .setTitle("HELP PAGE")
+                    .setMessage(Html.fromHtml(urlSource))
+                    .setPositiveButton("OKAY", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+
+                        }
+                    })
+                    .show();
+
+        }
+
         return super.onOptionsItemSelected(item);
     }
 
