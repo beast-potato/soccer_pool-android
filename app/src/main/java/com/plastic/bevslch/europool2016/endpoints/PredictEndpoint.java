@@ -12,7 +12,7 @@ import com.beastpotato.potato.api.UrlParam;
  *         Created on 2016-06-03
  *         Copyright © 2015 RBC. All rights reserved.
  */
-@Endpoint(httpMethod = Constants.Http.POST, relativeUrl = "/test/predictgame", jsonExample = "{\"success\":true,\"errorCode\":0,\"errorMessage\":\"\"}")
+@Endpoint(httpMethod = Constants.Http.POST, relativeUrl = "/predictgame", jsonExample = "{\"success\":true,\"errorCode\":0,\"errorMessage\":\"\"}")
 public class PredictEndpoint {
     @HeaderParam("token")
     public String token;
