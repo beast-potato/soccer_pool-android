@@ -1,6 +1,7 @@
 package com.plastic.bevslch.europool2016.Adapters;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -57,14 +58,18 @@ public class CupMatchAdapter extends RecyclerView.Adapter<CupMatchAdapter.Fixtur
         if (fixtures.get(position).hasBeenPredicted) {
             holder.homePrediction.setText(String.valueOf(fixtures.get(position).prediction.homeGoals));
             holder.awayPrediction.setText(String.valueOf(fixtures.get(position).prediction.awayGoals));
+            setupBadge(holder.pointsBagde, fixtures.get(position).prediction.points);
         } else {
             holder.homePrediction.setText("-");
             holder.awayPrediction.setText("-");
+            setupBadge(holder.pointsBagde, 0L);
         }
 
         if (type == MATCH_TYPE.UPCOMING || type == MATCH_TYPE.PROGRESS) {
             holder.finalScore.setVisibility(View.GONE);
+            holder.pointsBagde.setVisibility(View.GONE);
             if (type == MATCH_TYPE.UPCOMING) {
+                holder.matchStartTime.setVisibility(View.VISIBLE);
                 holder.matchStartTime.setText(Utilities.formatDate(fixtures.get(position).startTime));
             } else {
                 holder.matchStartTime.setVisibility(View.GONE);
@@ -72,6 +77,8 @@ public class CupMatchAdapter extends RecyclerView.Adapter<CupMatchAdapter.Fixtur
         } else {
             holder.finalScore.setText(context.getString(R.string.cup_match_final, fixtures.get(position).homeGoals, fixtures.get(position).awayGoals));
             holder.matchStartTime.setVisibility(View.GONE);
+            holder.pointsBagde.setVisibility(View.VISIBLE);
+            holder.pointsBagde.setVisibility(View.VISIBLE);
         }
 
         Picasso.with(context)
@@ -84,6 +91,20 @@ public class CupMatchAdapter extends RecyclerView.Adapter<CupMatchAdapter.Fixtur
                 .placeholder(R.drawable.ic_photo)
                 .into(holder.awayFlag);
     }
+
+    private void setupBadge(TextView badge, Long points) {
+
+        badge.setText("+" + points);
+
+        if (points == 0) {
+            badge.setBackgroundColor(Color.GRAY);
+        } else if (points < 5) {
+            badge.setBackgroundColor(Color.YELLOW);
+        } else {
+            badge.setBackgroundColor(Color.GREEN);
+        }
+    }
+
     @Override
     public int getItemCount() {
         return fixtures.size();
@@ -111,7 +132,7 @@ public class CupMatchAdapter extends RecyclerView.Adapter<CupMatchAdapter.Fixtur
     }
 
     public static class FixtureViewHolder extends RecyclerView.ViewHolder {
-        TextView homeName, awayName, finalScore, homePrediction, awayPrediction, matchStartTime;
+        TextView homeName, awayName, finalScore, homePrediction, awayPrediction, matchStartTime, pointsBagde;
         ImageView homeFlag, awayFlag;
 
         FixtureViewHolder(View itemView, final CupMatchClickListener listener) {
@@ -124,6 +145,7 @@ public class CupMatchAdapter extends RecyclerView.Adapter<CupMatchAdapter.Fixtur
             homeFlag = (ImageView) itemView.findViewById(R.id.match_home_flag);
             awayFlag = (ImageView) itemView.findViewById(R.id.match_away_flag);
             matchStartTime = (TextView) itemView.findViewById(R.id.match_start_time);
+            pointsBagde = (TextView) itemView.findViewById(R.id.match_points_badge);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
