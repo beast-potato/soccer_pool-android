@@ -15,6 +15,8 @@ import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 
 import com.plastic.bevslch.europool2016.Adapters.HelperAsyncTask;
 import com.plastic.bevslch.europool2016.Fragments.CupFragment;
@@ -111,26 +113,28 @@ public class HomeActivity extends AppCompatActivity {
         }
         if(id == R.id.action_help)
         {
-            String urlSource ="";
-            HelperAsyncTask helpTask = new HelperAsyncTask();
-            try {
-                urlSource = helpTask.execute("http://104.131.118.14/info").get();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            } catch (ExecutionException e) {
-                e.printStackTrace();
-            }
+            AlertDialog.Builder alert = new AlertDialog.Builder(this);
+            alert.setTitle("Help");
 
-            new AlertDialog.Builder(this)
-                    .setTitle("HELP PAGE")
-                    .setMessage(Html.fromHtml(urlSource))
-                    .setPositiveButton("OKAY", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
+            WebView wv = new WebView(this);
+            wv.loadUrl("http://104.131.118.14/info");
+            wv.setWebViewClient(new WebViewClient() {
+                @Override
+                public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                    view.loadUrl(url);
 
-                        }
-                    })
-                    .show();
+                    return true;
+                }
+            });
+
+            alert.setView(wv);
+            alert.setNegativeButton("Close", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int id) {
+                    dialog.dismiss();
+                }
+            });
+            alert.show();
 
         }
 
