@@ -9,7 +9,7 @@ import com.beastpotato.potato.api.UrlParam;
  * Created by Oleksiy on 6/2/2016.
  */
 
-@Endpoint(httpMethod = Constants.Http.POST, relativeUrl = "/test/login", jsonExample = "{\"success\":true,\"errorCode\":0,\"errorMessage\":\"\",\"token\":\"swagmonkey@plasticmobile.com\"}")
+@Endpoint(httpMethod = Constants.Http.POST, relativeUrl = "/test/login", jsonExample = "{\"success\":true,\"errorCode\":0,\"errorMessage\":\"\",\"token\":\"longstringhere\",\"user\":{\"email\":\"someemail\",\"password\":\"somepassword\",\"name\":\"Oleksiy Martynov\",\"photo\":\"someurlhere\"}}")
 public abstract class LoginEndpoint {
     @HeaderParam("Content-Type")
     String contentType;

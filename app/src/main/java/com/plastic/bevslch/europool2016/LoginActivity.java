@@ -134,6 +134,10 @@ public class LoginActivity extends AppCompatActivity{
                             if (data.success) {
                                 PreffHelper.getInstance().setEmail(mEmailView.getText().toString());
                                 PreffHelper.getInstance().setToken(data.token);
+                                if (data.user != null) {
+                                    PreffHelper.getInstance().setName(data.user.name);
+                                    PreffHelper.getInstance().setPhotoUrl(data.user.photo);
+                                }
                                 startActivity(new Intent(LoginActivity.this, HomeActivity.class));
                             }
                             if (!data.success) {
@@ -170,11 +174,15 @@ public class LoginActivity extends AppCompatActivity{
                         StringBuilder builder = new StringBuilder("Error:");
                         if (error.networkResponse != null)
                             builder.append(error.networkResponse.statusCode);
+                        else
+                            builder.append("no internet");
                         if (error.getMessage() != null)
                             builder.append(" - " + error.getMessage());
                         Toast.makeText(LoginActivity.this, builder.toString(), Toast.LENGTH_LONG).show();
                         if (error.networkResponse != null)
                             Log.e(TAG, "Error:" + new String(error.networkResponse.data));
+                        else
+                            Log.e(TAG, "Error:no internet");
                     }
                 });
             }

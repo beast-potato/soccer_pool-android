@@ -22,11 +22,9 @@ import com.plastic.bevslch.europool2016.R;
 import com.plastic.bevslch.europool2016.endpoints.PoolEndpointApiRequest;
 import com.plastic.bevslch.europool2016.endpoints.poolendpointresponse.Datum;
 import com.plastic.bevslch.europool2016.endpoints.poolendpointresponse.PoolEndpointApiResponse;
-import com.plastic.bevslch.europool2016.views.BarChartView;
 import com.plastic.bevslch.europool2016.views.LoadingOverlayView;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by sjsaldanha on 2016-06-01.
@@ -103,6 +101,7 @@ public class StandingFragment extends Fragment {
             @Override
             public void onResponse(PoolEndpointApiResponse data) {
                 Log.i(TAG, "Standings api call status success: " + data.success);
+                rv.setVisibility(View.VISIBLE);
                 errorOverlay.setVisibility(View.GONE);
                 loadingOverlayView.setVisibility(View.GONE);
                 refreshLayout.setRefreshing(false);
@@ -110,21 +109,23 @@ public class StandingFragment extends Fragment {
                     ArrayList<Players> gamePlayers = new ArrayList<>();
                     for (int i = 0; i < data.data.size(); i++) {
                         Datum d = data.data.get(i);
-                        gamePlayers.add(new Players(d.name, d.points.intValue(), (i + 1)));
+                        gamePlayers.add(new Players(d.name, d.points.intValue(), (i + 1), d.photo));
                     }
                     standingRecylcerViewAdapter = new StandingRecylcerViewAdapter(gamePlayers);
                     rv.setAdapter(standingRecylcerViewAdapter);
                 } else {
                     errorOverlay.setVisibility(View.VISIBLE);
+                    rv.setVisibility(View.GONE);
                 }
             }
 
             @Override
             public void onError(VolleyError error) {
-                Log.i(TAG, "error:" + error.networkResponse.statusCode);
+                Log.i(TAG, "error:" + (error.networkResponse == null ? "no internet" : error.networkResponse.statusCode));
                 loadingOverlayView.setVisibility(View.GONE);
                 refreshLayout.setRefreshing(false);
                 errorOverlay.setVisibility(View.VISIBLE);
+                rv.setVisibility(View.GONE);
             }
         });
     }

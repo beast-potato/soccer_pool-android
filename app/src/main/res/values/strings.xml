@@ -22,6 +22,7 @@
     <!--Standings-->
     <string name="no_standings">No Standings</string>
     <string name="cup_list_empty">No matches yet.</string>
+    <string name="standing_item_pts">%1$d pts</string>
     <!--Predictions-->
     <string name="prediction_dialog_title">Prediction</string>
     <string name="prediction_dialog_score_hint">0</string>
