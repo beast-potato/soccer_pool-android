@@ -84,8 +84,8 @@ public class HomeActivity extends AppCompatActivity {
                     .setMessage("Are you sure you want to logout?")
                     .setPositiveButton("Logout", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
-                            PreffHelper.getInstance().setEmail(null);
-                            PreffHelper.getInstance().setToken(null);
+                            PreffHelper.getInstance().clearData();
+
                             startActivity(new Intent(HomeActivity.this, LoginActivity.class));
                             finish();
                         }

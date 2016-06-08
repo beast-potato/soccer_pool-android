@@ -1,15 +1,18 @@
 package com.plastic.bevslch.europool2016.Adapters;
 
+import android.content.Context;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.plastic.bevslch.europool2016.Models.Players;
 import com.plastic.bevslch.europool2016.R;
 import com.plastic.bevslch.europool2016.views.BarChartView;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,15 +45,25 @@ public class StandingRecylcerViewAdapter extends RecyclerView.Adapter<RecyclerVi
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
         if(holder instanceof PlayerViewHolder) {
+            Context context = holder.itemView.getContext();
             PlayerViewHolder playerViewHolder = (PlayerViewHolder)holder;
             List<Integer> colors = getColors(players.size());
             Players player = players.get(position-1);
-            playerViewHolder.playerName.setText(player.getName());
+            if (player.getName() != null && player.getName().contains(" ")) {
+                playerViewHolder.playerName.setText(player.getName().split(" ")[0]);
+            } else {
+                playerViewHolder.playerName.setText(player.getName());
+            }
             playerViewHolder.playerName.setTextColor(colors.get(position - 1));
-            playerViewHolder.playerPoints.setText(String.valueOf(player.getPoints()));
+            playerViewHolder.playerPoints.setText(context.getString(R.string.standing_item_pts, player.getPoints()));
             playerViewHolder.playerPoints.setTextColor(colors.get(position - 1));
             playerViewHolder.playerPosition.setText(String.valueOf(player.getPosition()));
             playerViewHolder.playerPosition.setTextColor(colors.get(position - 1));
+            Picasso.with(context)
+                    .load(player.getPicUrl())
+                    .placeholder(R.drawable.ic_photo)
+                    .fit()
+                    .into(playerViewHolder.playerPic);
             if (position - 1 == selectedItem) {
                 holder.itemView.setBackgroundResource(R.color.colorPrimaryLight);
             } else {
@@ -112,6 +125,7 @@ public class StandingRecylcerViewAdapter extends RecyclerView.Adapter<RecyclerVi
         TextView playerName;
         TextView playerPoints;
         TextView playerPosition;
+        ImageView playerPic;
 
         PlayerViewHolder(View itemView) {
             super(itemView);
@@ -119,6 +133,7 @@ public class StandingRecylcerViewAdapter extends RecyclerView.Adapter<RecyclerVi
             playerName = (TextView) itemView.findViewById(R.id.player_name);
             playerPoints = (TextView) itemView.findViewById(R.id.player_points);
             playerPosition = (TextView) itemView.findViewById(R.id.player_position);
+            playerPic = (ImageView) itemView.findViewById(R.id.player_photo);
         }
     }
 
