@@ -119,9 +119,7 @@ public class LoginActivity extends AppCompatActivity{
 
 
     private void makeLoginCall(boolean signup) {
-        if (!mEmailView.getText().toString().contains("@plasticmobile.com")) {
-            mEmailView.setError("Enter a Plastic Mobile Email addess");
-        } else {
+
             mLoginOverlay.setVisibility(View.VISIBLE);
             final LoginEndpointApiRequest loginEndpointApiRequest = new LoginEndpointApiRequest(Constants.BASE_URL, LoginActivity.this);
             loginEndpointApiRequest.setContentType(Constants.contentTypeJson);
@@ -161,7 +159,14 @@ public class LoginActivity extends AppCompatActivity{
                             if (!data.success) {
                                 Log.d(TAG, "onResponse: YOU HAVE REACHED");
                                 if (data.errorCode == 1) {
-                                    mPasswordView.setError("Password is incorrect, please enter the correct password");
+                                    if(data.errorMessage.contains("email"))
+                                    {
+                                        mEmailView.setError(data.errorMessage);
+                                    }
+                                    else {
+                                        mPasswordView.setError(data.errorMessage);
+
+                                    }
                                 }
                                 if (data.errorCode == 2) {
                                     new AlertDialog.Builder(LoginActivity.this)
@@ -204,7 +209,6 @@ public class LoginActivity extends AppCompatActivity{
                     }
                 });
             }
-        }
     }
 }
 
