@@ -69,7 +69,8 @@
             android:id="@+id/prediction_score_home"
             style="@style/PredictionDialogScore"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:imeOptions="actionNext" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -81,7 +82,8 @@
             android:id="@+id/prediction_score_away"
             style="@style/PredictionDialogScore"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:imeOptions="actionDone" />
 
     </LinearLayout>
 

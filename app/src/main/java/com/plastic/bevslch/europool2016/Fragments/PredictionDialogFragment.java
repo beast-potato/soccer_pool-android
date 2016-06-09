@@ -1,13 +1,17 @@
 package com.plastic.bevslch.europool2016.Fragments;
 
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -86,17 +90,30 @@ public class PredictionDialogFragment extends DialogFragment {
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!TextUtils.isEmpty(homeScore.getText()) && !TextUtils.isEmpty(awayScore.getText())) {
-                    submit.setText(R.string.prediction_dialog_submit_progress);
-                    submit.setEnabled(false);
-                    makePrediction(match.gameID, homeScore.getText().toString(), awayScore.getText().toString());
-                } else {
-                    Toast.makeText(getActivity(), "Score missing", Toast.LENGTH_SHORT).show();
+                submit();
+            }
+        });
+        awayScore.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
+                if ((keyEvent != null && (keyEvent.getKeyCode() == KeyEvent.KEYCODE_ENTER)) || (id == EditorInfo.IME_ACTION_DONE)) {
+                    submit();
+                    return true;
                 }
+                return false;
             }
         });
     }
 
+    private void submit() {
+        if (!TextUtils.isEmpty(homeScore.getText()) && !TextUtils.isEmpty(awayScore.getText())) {
+            submit.setText(R.string.prediction_dialog_submit_progress);
+            submit.setEnabled(false);
+            makePrediction(match.gameID, homeScore.getText().toString(), awayScore.getText().toString());
+        } else {
+            Toast.makeText(getActivity(), "Score missing", Toast.LENGTH_SHORT).show();
+        }
+    }
     private void getArgs() {
         Bundle args = getArguments();
         if (args != null) {
@@ -125,6 +142,17 @@ public class PredictionDialogFragment extends DialogFragment {
                 .load(match.awayTeam.image)
                 .placeholder(R.drawable.ic_photo)
                 .into(awayFlag);
+
+        view.post(new Runnable() {
+            @Override
+            public void run() {
+                if (homeScore.requestFocus()) {
+                    InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.showSoftInput(homeScore, InputMethodManager.SHOW_IMPLICIT);
+                }
+            }
+        });
+
     }
 
     public void setDialogListener(PredictionDialogListener listener) {
