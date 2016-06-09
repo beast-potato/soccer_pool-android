@@ -90,7 +90,11 @@ public class StandingRecylcerViewAdapter extends RecyclerView.Adapter<RecyclerVi
             chartViewHolder.barChartView.setBarTapListener(new BarChartView.BarTapListener() {
                 @Override
                 public void onItemTap(int itemIndex) {
-                    selectedItem = itemIndex;
+                    if (selectedItem == itemIndex) {
+                        selectedItem = -1;
+                    } else {
+                        selectedItem = itemIndex;
+                    }
                     notifyDataSetChanged();
                 }
             });
