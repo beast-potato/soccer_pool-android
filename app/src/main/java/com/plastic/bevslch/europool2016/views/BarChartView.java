@@ -7,6 +7,7 @@ import android.graphics.Paint;
 import android.graphics.RectF;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
+import android.view.MotionEvent;
 import android.view.View;
 
 import com.plastic.bevslch.europool2016.R;
@@ -34,6 +35,7 @@ public class BarChartView extends View {
     private Paint gridPaint, textPaint, barPaint, debugPaint;
     private RectF screenRect;
     private int selectedItem;
+    private BarTapListener barTapListener;
 
     public BarChartView(Context context) {
         super(context);
@@ -86,6 +88,25 @@ public class BarChartView extends View {
         if (data != null && screenRect != null && data.size() != 0) { //got points
             drawBars(canvas, drawGrid(canvas, screenRect));
         }
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        if (event.getAction() == MotionEvent.ACTION_DOWN && screenRect != null && data != null && data.size() > 0 && barTapListener != null) { //we dont get ACTION_UP for some reason
+            float screenX = event.getX();
+            float screenY = event.getY();
+            float viewX = screenX - getLeft();
+            float viewY = screenY - getTop();
+            float step = screenRect.width() / data.size();
+            selectedItem = (int) (viewX / step);
+            barTapListener.onItemTap(selectedItem);
+            return true;
+        }
+        return false;
+    }
+
+    public void setBarTapListener(BarTapListener barTapListener) {
+        this.barTapListener = barTapListener;
     }
 
     private RectF drawGrid(Canvas canvas, RectF container) {
@@ -226,6 +247,10 @@ public class BarChartView extends View {
             this.value = value;
             this.color = color;
         }
+    }
+
+    public interface BarTapListener {
+        void onItemTap(int itemIndex);
     }
 }
 

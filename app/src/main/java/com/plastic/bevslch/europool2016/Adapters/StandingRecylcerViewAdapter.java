@@ -1,7 +1,6 @@
 package com.plastic.bevslch.europool2016.Adapters;
 
 import android.content.Context;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -65,9 +64,9 @@ public class StandingRecylcerViewAdapter extends RecyclerView.Adapter<RecyclerVi
                     .fit()
                     .into(playerViewHolder.playerPic);
             if (position - 1 == selectedItem) {
-                holder.itemView.setBackgroundResource(R.color.colorPrimaryLight);
+                playerViewHolder.cardInner.setBackgroundResource(R.color.colorPrimaryLight);
             } else {
-                holder.itemView.setBackgroundResource(R.color.colorTextIcons);
+                playerViewHolder.cardInner.setBackgroundResource(R.color.colorTextIcons);
             }
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -88,7 +87,13 @@ public class StandingRecylcerViewAdapter extends RecyclerView.Adapter<RecyclerVi
             ChartViewHolder chartViewHolder = (ChartViewHolder)holder;
             chartViewHolder.barChartView.setData(chartData);
             ((ChartViewHolder) holder).barChartView.setSelectedItem(selectedItem);
-            holder.itemView.setOnClickListener(null);
+            chartViewHolder.barChartView.setBarTapListener(new BarChartView.BarTapListener() {
+                @Override
+                public void onItemTap(int itemIndex) {
+                    selectedItem = itemIndex;
+                    notifyDataSetChanged();
+                }
+            });
         }
     }
 
@@ -121,7 +126,7 @@ public class StandingRecylcerViewAdapter extends RecyclerView.Adapter<RecyclerVi
     }
 
     public static class PlayerViewHolder extends RecyclerView.ViewHolder {
-        CardView cv;
+        View cardInner;
         TextView playerName;
         TextView playerPoints;
         TextView playerPosition;
@@ -129,7 +134,7 @@ public class StandingRecylcerViewAdapter extends RecyclerView.Adapter<RecyclerVi
 
         PlayerViewHolder(View itemView) {
             super(itemView);
-            cv = (CardView) itemView.findViewById(R.id.cv);
+            cardInner = itemView.findViewById(R.id.card_inner);
             playerName = (TextView) itemView.findViewById(R.id.player_name);
             playerPoints = (TextView) itemView.findViewById(R.id.player_points);
             playerPosition = (TextView) itemView.findViewById(R.id.player_position);
