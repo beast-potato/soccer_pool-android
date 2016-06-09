@@ -20,6 +20,7 @@
 
             <TextView
                 android:id="@+id/prediction_team_name_home"
+                style="@style/PredictionDialogTeamTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
 
@@ -44,6 +45,7 @@
 
             <TextView
                 android:id="@+id/prediction_team_name_away"
+                style="@style/PredictionDialogTeamTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
 

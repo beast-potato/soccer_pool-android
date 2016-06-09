@@ -83,11 +83,13 @@ public class CupMatchAdapter extends RecyclerView.Adapter<CupMatchAdapter.Fixtur
 
         Picasso.with(context)
                 .load(fixtures.get(position).homeTeam.image)
+                .resize(100, 75)
                 .placeholder(R.drawable.ic_photo)
                 .into(holder.homeFlag);
 
         Picasso.with(context)
                 .load(fixtures.get(position).awayTeam.image)
+                .resize(100, 75)
                 .placeholder(R.drawable.ic_photo)
                 .into(holder.awayFlag);
     }

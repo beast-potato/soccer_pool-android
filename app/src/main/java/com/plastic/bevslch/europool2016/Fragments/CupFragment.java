@@ -109,6 +109,9 @@ public class CupFragment extends Fragment implements CupMatchAdapter.CupMatchCli
         upcomingList.setAdapter(upcomingAdapter);
         completedList.setAdapter(completedAdapter);
         progressList.setAdapter(progressAdapter);
+        upcomingList.setNestedScrollingEnabled(false);
+        upcomingList.setNestedScrollingEnabled(false);
+        upcomingList.setNestedScrollingEnabled(false);
         loadingOverlayView.setVisibility(View.VISIBLE);
     }
 
