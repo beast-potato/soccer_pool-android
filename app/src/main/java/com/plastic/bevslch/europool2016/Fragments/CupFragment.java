@@ -105,13 +105,13 @@ public class CupFragment extends Fragment implements CupMatchAdapter.CupMatchCli
         progressList.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
         upcomingAdapter = new CupMatchAdapter(getActivity(), upcomingGames, CupMatchAdapter.MATCH_TYPE.UPCOMING, this);
         completedAdapter = new CupMatchAdapter(getActivity(), completedGames, CupMatchAdapter.MATCH_TYPE.COMPLETED, null);
-        progressAdapter = new CupMatchAdapter(getActivity(), completedGames, CupMatchAdapter.MATCH_TYPE.PROGRESS, null);
+        progressAdapter = new CupMatchAdapter(getActivity(), progressGames, CupMatchAdapter.MATCH_TYPE.PROGRESS, null);
         upcomingList.setAdapter(upcomingAdapter);
         completedList.setAdapter(completedAdapter);
         progressList.setAdapter(progressAdapter);
         upcomingList.setNestedScrollingEnabled(false);
-        upcomingList.setNestedScrollingEnabled(false);
-        upcomingList.setNestedScrollingEnabled(false);
+        completedList.setNestedScrollingEnabled(false);
+        progressList.setNestedScrollingEnabled(false);
         loadingOverlayView.setVisibility(View.VISIBLE);
     }
 
