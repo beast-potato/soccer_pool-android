@@ -39,7 +39,7 @@ public class CupFragment extends Fragment implements CupMatchAdapter.CupMatchCli
     private View fragmentView;
     private SwipeRefreshLayout refreshLayout;
     private RecyclerView upcomingList, completedList, progressList;
-    private TextView upcomingEmpty, completedEmpty, progressEmpty;
+    private TextView upcomingEmpty, completedEmpty, progressTitle;
     private LoadingOverlayView loadingOverlayView;
 
     // Adapters
@@ -84,7 +84,7 @@ public class CupFragment extends Fragment implements CupMatchAdapter.CupMatchCli
         progressList = (RecyclerView) fragmentView.findViewById(R.id.cup_progress_list);
         upcomingEmpty = (TextView) fragmentView.findViewById(R.id.cup_upcoming_empty);
         completedEmpty = (TextView) fragmentView.findViewById(R.id.cup_completed_empty);
-        progressEmpty = (TextView) fragmentView.findViewById(R.id.cup_progress_empty);
+        progressTitle = (TextView) fragmentView.findViewById(R.id.cup_progress_title);
         loadingOverlayView = (LoadingOverlayView) fragmentView.findViewById(R.id.loading_overlay);
     }
 
@@ -137,11 +137,11 @@ public class CupFragment extends Fragment implements CupMatchAdapter.CupMatchCli
         }
 
         if (progressGames.isEmpty()) {
+            progressTitle.setVisibility(View.GONE);
             progressList.setVisibility(View.GONE);
-            progressEmpty.setVisibility(View.VISIBLE);
         } else {
+            progressTitle.setVisibility(View.VISIBLE);
             progressList.setVisibility(View.VISIBLE);
-            progressEmpty.setVisibility(View.GONE);
         }
     }
 

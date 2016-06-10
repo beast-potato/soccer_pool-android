@@ -19,6 +19,20 @@
                 android:orientation="vertical">
 
                 <TextView
+                    android:id="@+id/cup_progress_title"
+                    style="@style/CupTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/cup_progress_title"/>
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/cup_progress_list"
+                    style="@style/CupList"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"/>
+
+                <TextView
                     android:id="@+id/cup_upcoming_title"
                     style="@style/CupTitle"
                     android:layout_width="match_parent"
@@ -34,27 +48,6 @@
 
                 <TextView
                     android:id="@+id/cup_upcoming_empty"
-                    style="@style/CupListEmpty"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/cup_list_empty"/>
-
-                <TextView
-                    android:id="@+id/cup_progress_title"
-                    style="@style/CupTitle"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/cup_progress_title"/>
-
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/cup_progress_list"
-                    style="@style/CupList"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:visibility="gone"/>
-
-                <TextView
-                    android:id="@+id/cup_progress_empty"
                     style="@style/CupListEmpty"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
