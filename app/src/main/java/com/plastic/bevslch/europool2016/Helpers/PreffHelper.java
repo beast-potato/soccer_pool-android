@@ -62,10 +62,6 @@ public class PreffHelper {
     }
 
     public void clearData() {
-
-        instance.setEmail(null);
-        instance.setToken(null);
-        instance.setName(null);
-        instance.setPhotoUrl(null);
+        instance.settings.edit().clear().apply();
     }
 }
