@@ -66,13 +66,14 @@ public class CupMatchAdapter extends RecyclerView.Adapter<CupMatchAdapter.Fixtur
         }
 
         if (type == MATCH_TYPE.UPCOMING || type == MATCH_TYPE.PROGRESS) {
-            holder.finalScore.setVisibility(View.GONE);
             holder.pointsBagde.setVisibility(View.GONE);
             if (type == MATCH_TYPE.UPCOMING) {
+                holder.finalScore.setVisibility(View.GONE);
                 holder.matchStartTime.setVisibility(View.VISIBLE);
                 holder.matchStartTime.setText(Utilities.formatDate(fixtures.get(position).startTime));
             } else {
                 holder.matchStartTime.setVisibility(View.GONE);
+                holder.finalScore.setText(context.getString(R.string.cup_match_live, fixtures.get(position).homeGoals, fixtures.get(position).awayGoals));
             }
         } else {
             holder.finalScore.setText(context.getString(R.string.cup_match_final, fixtures.get(position).homeGoals, fixtures.get(position).awayGoals));

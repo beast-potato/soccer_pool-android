@@ -18,7 +18,6 @@ import com.beastpotato.potato.api.net.ApiRequest;
 import com.plastic.bevslch.europool2016.Adapters.CupMatchAdapter;
 import com.plastic.bevslch.europool2016.Constants;
 import com.plastic.bevslch.europool2016.Helpers.PreffHelper;
-import com.plastic.bevslch.europool2016.Helpers.Utilities;
 import com.plastic.bevslch.europool2016.R;
 import com.plastic.bevslch.europool2016.endpoints.GamesEndpointApiRequest;
 import com.plastic.bevslch.europool2016.endpoints.gamesendpointresponse.Datum;
@@ -162,14 +161,19 @@ public class CupFragment extends Fragment implements CupMatchAdapter.CupMatchCli
 
                     if (games.data != null && games.data.size() > 0) {
                         for (Datum game : games.data) {
-                            if (Utilities.isBeforeNow(game.startTime)) {
-                                if (Utilities.isMatchInProgress(game.startTime)) {
-                                    progressGames.add(game);
-                                } else {
+                            switch (game.state) {
+                                case "complete": {
                                     completedGames.add(game);
+                                    break;
                                 }
-                            } else {
-                                upcomingGames.add(game);
+                                case "upcoming": {
+                                    upcomingGames.add(game);
+                                    break;
+                                }
+                                case "progress": {
+                                    progressGames.add(game);
+                                    break;
+                                }
                             }
                         }
                     }
