@@ -1,5 +1,8 @@
 package com.plastic.bevslch.europool2016.Adapters;
 
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
 import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -20,6 +23,7 @@ import java.util.List;
  */
 
 public class StandingsBarAdapter extends RecyclerView.Adapter<StandingsBarAdapter.BarViewHolder> {
+    private static final int ANIM_DURATION = 1000;
     List<Players> players;
     int playerMaxPoints;
 
@@ -45,7 +49,8 @@ public class StandingsBarAdapter extends RecyclerView.Adapter<StandingsBarAdapte
     }
 
     @Override
-    public void onBindViewHolder(BarViewHolder holder, int position) {
+    public void onBindViewHolder(final BarViewHolder holder, int position) {
+        holder.cancelAnimations();
         Players player = players.get(position);
         String name;
         if (player.getName() != null && player.getName().contains(" ")) {
@@ -62,8 +67,23 @@ public class StandingsBarAdapter extends RecyclerView.Adapter<StandingsBarAdapte
                 .resize(150, 150)
                 .transform(new CircleTransformation())
                 .into(holder.image);
-        holder.barView.setColor(getColorForIndex(position));
-        holder.barView.setPercent((float) player.getPoints() / (float) playerMaxPoints);
+        holder.barView.setColor(getColorForIndex((float) position, (float) playerMaxPoints));
+        float percent = (float) player.getPoints() / (float) playerMaxPoints;
+        holder.barView.setPercent(percent);
+        ObjectAnimator barAnimation = ObjectAnimator.ofFloat(holder.barView, "percent", 0.0f, percent)
+                .setDuration(ANIM_DURATION);
+        ValueAnimator pointAnimation = ValueAnimator.ofInt(0, player.getPoints())
+                .setDuration(ANIM_DURATION);
+        pointAnimation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                int value = (Integer) animation.getAnimatedValue();
+                holder.points.setText(holder.points.getContext().getString(R.string.standing_item_pts, value));
+            }
+        });
+        holder.animatorSet.playTogether(barAnimation, pointAnimation);
+        holder.startAnimations();
+
     }
 
     private String capitalize(final String line) {
@@ -73,12 +93,8 @@ public class StandingsBarAdapter extends RecyclerView.Adapter<StandingsBarAdapte
             return null;
     }
 
-    private int getColorForIndex(int i) {
-        int R = (255 * i) / players.size();
-        int G = (255 * (players.size() - i)) / players.size();
-        int B = 0;
-        int A = 255;
-        return Color.argb(255, R, G, B);
+    private int getColorForIndex(float i, float max) {
+        return Color.HSVToColor(new float[]{360f * i / max, 1f, 1f});
     }
 
     @Override
@@ -90,6 +106,7 @@ public class StandingsBarAdapter extends RecyclerView.Adapter<StandingsBarAdapte
         ImageView image;
         TextView name, points;
         SingleBarView barView;
+        AnimatorSet animatorSet = new AnimatorSet();
 
         public BarViewHolder(View itemView) {
             super(itemView);
@@ -97,6 +114,14 @@ public class StandingsBarAdapter extends RecyclerView.Adapter<StandingsBarAdapte
             name = (TextView) itemView.findViewById(R.id.name_text);
             barView = (SingleBarView) itemView.findViewById(R.id.bar_view);
             points = (TextView) itemView.findViewById(R.id.points_text);
+        }
+
+        public void startAnimations() {
+            animatorSet.start();
+        }
+
+        public void cancelAnimations() {
+            animatorSet.cancel();
         }
     }
 }
