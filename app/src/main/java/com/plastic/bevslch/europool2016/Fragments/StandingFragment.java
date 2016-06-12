@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -14,7 +13,7 @@ import android.view.ViewGroup;
 
 import com.android.volley.VolleyError;
 import com.beastpotato.potato.api.net.ApiRequest;
-import com.plastic.bevslch.europool2016.Adapters.StandingRecylcerViewAdapter;
+import com.plastic.bevslch.europool2016.Adapters.StandingsBarAdapter;
 import com.plastic.bevslch.europool2016.Constants;
 import com.plastic.bevslch.europool2016.Helpers.PreffHelper;
 import com.plastic.bevslch.europool2016.Models.Players;
@@ -38,7 +37,7 @@ public class StandingFragment extends Fragment {
     private LoadingOverlayView loadingOverlayView;
     private RecyclerView rv;
     private View errorOverlay;
-    private StandingRecylcerViewAdapter standingRecylcerViewAdapter;
+    private StandingsBarAdapter standingRecylcerViewAdapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -70,21 +69,7 @@ public class StandingFragment extends Fragment {
         LinearLayoutManager llm = new LinearLayoutManager(getContext());
         rv.setLayoutManager(llm);
         loadingOverlayView.setVisibility(View.VISIBLE);
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 3);
-        gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
-            @Override
-            public int getSpanSize(int position) {
-                switch(standingRecylcerViewAdapter.getItemViewType(position)){
-                    case StandingRecylcerViewAdapter.TYPE_CHART:
-                        return 3;
-                    case StandingRecylcerViewAdapter.TYPE_ITEM:
-                        return 1;
-                    default:
-                        return 0;
-                }
-            }
-        });
-        rv.setLayoutManager(gridLayoutManager);
+        rv.setLayoutManager(new LinearLayoutManager(getContext()));
     }
 
     @Override
@@ -111,7 +96,7 @@ public class StandingFragment extends Fragment {
                         Datum d = data.data.get(i);
                         gamePlayers.add(new Players(d.name, d.points.intValue(), (i + 1), d.photo));
                     }
-                    standingRecylcerViewAdapter = new StandingRecylcerViewAdapter(gamePlayers);
+                    standingRecylcerViewAdapter = new StandingsBarAdapter(gamePlayers);
                     rv.setAdapter(standingRecylcerViewAdapter);
                 } else {
                     errorOverlay.setVisibility(View.VISIBLE);
