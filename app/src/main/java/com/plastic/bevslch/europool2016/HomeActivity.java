@@ -114,7 +114,7 @@ public class HomeActivity extends AppCompatActivity {
         if(id == R.id.action_help)
         {
             AlertDialog.Builder alert = new AlertDialog.Builder(this);
-            alert.setTitle("Help");
+            alert.setTitle("Help (Logged in as" + PreffHelper.getInstance().getEmail() + ")");
 
             WebView wv = new WebView(this);
             wv.loadUrl("http://104.131.118.14/info");
