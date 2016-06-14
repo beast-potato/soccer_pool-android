@@ -1,5 +1,6 @@
 package com.plastic.bevslch.europool2016;
 
+import android.animation.ValueAnimator;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -59,7 +60,18 @@ public class HomeActivity extends AppCompatActivity {
                     @Override
                     public void onBusEvent(Players eventData, Object sender) {
                         if (eventData != null && eventData.getPicUrl().equals(PreffHelper.getInstance().getPhotoUrl())) {
-                            ((TextView) toolbar.findViewById(R.id.toolbar_points)).setText(getString(R.string.standing_item_pts, eventData.getPoints()));
+                            final TextView pointsText = (TextView) toolbar.findViewById(R.id.toolbar_points);
+                            pointsText.setText(getString(R.string.standing_item_pts, eventData.getPoints()));
+                            ValueAnimator pointAnimation = ValueAnimator.ofInt(0, eventData.getPoints())
+                                    .setDuration(1000);
+                            pointAnimation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                                @Override
+                                public void onAnimationUpdate(ValueAnimator animation) {
+                                    int value = (Integer) animation.getAnimatedValue();
+                                    pointsText.setText(getString(R.string.standing_item_pts, value));
+                                }
+                            });
+                            pointAnimation.start();
                         }
                     }
                 });
