@@ -52,6 +52,7 @@ public class StandingsBarAdapter extends RecyclerView.Adapter<StandingsBarAdapte
     public void onBindViewHolder(final BarViewHolder holder, int position) {
         holder.cancelAnimations();
         Players player = players.get(position);
+        holder.position.setText("#" + (position + 1));
         String name;
         if (player.getName() != null && player.getName().contains(" ")) {
             name = player.getName().split(" ")[0];
@@ -104,7 +105,7 @@ public class StandingsBarAdapter extends RecyclerView.Adapter<StandingsBarAdapte
 
     public class BarViewHolder extends RecyclerView.ViewHolder {
         ImageView image;
-        TextView name, points;
+        TextView name, points, position;
         SingleBarView barView;
         AnimatorSet animatorSet = new AnimatorSet();
 
@@ -114,6 +115,7 @@ public class StandingsBarAdapter extends RecyclerView.Adapter<StandingsBarAdapte
             name = (TextView) itemView.findViewById(R.id.name_text);
             barView = (SingleBarView) itemView.findViewById(R.id.bar_view);
             points = (TextView) itemView.findViewById(R.id.points_text);
+            position = (TextView) itemView.findViewById(R.id.position);
         }
 
         public void startAnimations() {

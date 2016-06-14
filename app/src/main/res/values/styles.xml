@@ -17,8 +17,8 @@
     </style>
 
     <style name="CustomTabTexStyle" parent="TextAppearance.Design.Tab">
-        <item name="android:textSize">14sp</item>
-        <item name="android:textColor">@color/colorPrimary</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">@color/colorPrimaryMedium</item>
         <item name="textAllCaps">false</item>
     </style>
     <style name="CupTitle">

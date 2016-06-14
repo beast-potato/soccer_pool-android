@@ -7,32 +7,27 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.text.Html;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.ImageView;
+import android.widget.TextView;
 
-import com.plastic.bevslch.europool2016.Adapters.HelperAsyncTask;
+import com.plastic.bevslch.europool2016.Adapters.CircleTransformation;
 import com.plastic.bevslch.europool2016.Fragments.CupFragment;
 import com.plastic.bevslch.europool2016.Fragments.StandingFragment;
 import com.plastic.bevslch.europool2016.Helpers.PreffHelper;
+import com.plastic.bevslch.europool2016.Models.Players;
+import com.plastic.bevslch.europool2016.bus.EventBus;
+import com.squareup.picasso.Picasso;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 public class HomeActivity extends AppCompatActivity {
 
@@ -46,9 +41,33 @@ public class HomeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_home);
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitleTextColor(ContextCompat.getColor(this, R.color.colorTextIcons));
-        toolbar.setLogo(R.mipmap.ic_launcher);
-        setSupportActionBar(toolbar);
+        if (toolbar != null) {
+            toolbar.setTitle("");
+            Picasso.with(this)
+                    .load(PreffHelper.getInstance().getPhotoUrl())
+                    .error(R.drawable.ic_account)
+                    .placeholder(R.drawable.ic_account)
+                    .resize(150, 150)
+                    .transform(new CircleTransformation())
+                    .into((ImageView) toolbar.findViewById(R.id.toolbar_image));
+            String name = PreffHelper.getInstance().getName();
+            if (name != null && name.contains(" ") && name.split(" ").length == 2) {
+                String[] nameParts = name.split(" ");
+                ((TextView) toolbar.findViewById(R.id.toolbar_firstname)).setText(nameParts[0]);
+                ((TextView) toolbar.findViewById(R.id.toolbar_lastname)).setText(nameParts[1]);
+                EventBus.getInstance().addListener(Players.class, new EventBus.BusEventListener<Players>() {
+                    @Override
+                    public void onBusEvent(Players eventData, Object sender) {
+                        if (eventData != null && eventData.getPicUrl().equals(PreffHelper.getInstance().getPhotoUrl())) {
+                            ((TextView) toolbar.findViewById(R.id.toolbar_points)).setText(getString(R.string.standing_item_pts, eventData.getPoints()));
+                        }
+                    }
+                });
+            } else {
+                ((TextView) toolbar.findViewById(R.id.toolbar_firstname)).setText(name);
+            }
+            setSupportActionBar(toolbar);
+        }
 
         viewPager = (ViewPager) findViewById(R.id.viewpager);
         setupViewPager(viewPager);
@@ -63,22 +82,6 @@ public class HomeActivity extends AppCompatActivity {
         adapter.addFragment(new StandingFragment(), "Standings");
         viewPager.setAdapter(adapter);
         setTitle(adapter.mFragmentTitleList.get(0));
-        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-            }
-
-            @Override
-            public void onPageSelected(int position) {
-                setTitle(adapter.mFragmentTitleList.get(position));
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-
-            }
-        });
     }
 
     @Override
@@ -114,7 +117,7 @@ public class HomeActivity extends AppCompatActivity {
         if(id == R.id.action_help)
         {
             AlertDialog.Builder alert = new AlertDialog.Builder(this);
-            alert.setTitle("Help (Logged in as" + PreffHelper.getInstance().getEmail() + ")");
+            alert.setTitle("Help (Logged in as " + PreffHelper.getInstance().getEmail() + ")");
 
             WebView wv = new WebView(this);
             wv.loadUrl("http://104.131.118.14/info");

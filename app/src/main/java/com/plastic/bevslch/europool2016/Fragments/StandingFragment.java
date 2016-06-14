@@ -18,6 +18,7 @@ import com.plastic.bevslch.europool2016.Constants;
 import com.plastic.bevslch.europool2016.Helpers.PreffHelper;
 import com.plastic.bevslch.europool2016.Models.Players;
 import com.plastic.bevslch.europool2016.R;
+import com.plastic.bevslch.europool2016.bus.EventBus;
 import com.plastic.bevslch.europool2016.endpoints.PoolEndpointApiRequest;
 import com.plastic.bevslch.europool2016.endpoints.poolendpointresponse.Datum;
 import com.plastic.bevslch.europool2016.endpoints.poolendpointresponse.PoolEndpointApiResponse;
@@ -94,7 +95,11 @@ public class StandingFragment extends Fragment {
                     ArrayList<Players> gamePlayers = new ArrayList<>();
                     for (int i = 0; i < data.data.size(); i++) {
                         Datum d = data.data.get(i);
-                        gamePlayers.add(new Players(d.name, d.points.intValue(), (i + 1), d.photo));
+                        Players p = new Players(d.name, d.points.intValue(), (i + 1), d.photo);
+                        gamePlayers.add(p);
+                        if (PreffHelper.getInstance().getPhotoUrl().equals(d.photo)) {
+                            EventBus.getInstance().sendData(p, this);
+                        }
                     }
                     standingRecylcerViewAdapter = new StandingsBarAdapter(gamePlayers);
                     rv.setAdapter(standingRecylcerViewAdapter);
