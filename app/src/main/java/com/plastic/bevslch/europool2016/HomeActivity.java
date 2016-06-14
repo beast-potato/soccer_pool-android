@@ -65,8 +65,25 @@ public class HomeActivity extends AppCompatActivity {
                     rotateAnimation.setDuration(500);
                     v.startAnimation(rotateAnimation);
                     tapCount++;
-                    if (tapCount == 5) {
-                        Toast.makeText(getBaseContext(), "Stop it!!!" + new String(Character.toChars(0x1F620)), Toast.LENGTH_LONG).show();
+                    if (tapCount == 1) {
+                        Toast.makeText(getBaseContext(), "Hi!" + new String(Character.toChars(0x1F60A)), Toast.LENGTH_LONG).show();
+                    } else if (tapCount == 5) {
+                        Toast.makeText(getBaseContext(), "Its getting annoying!" + new String(Character.toChars(0x1F620)), Toast.LENGTH_LONG).show();
+                    } else if (tapCount == 15) {
+                        Toast.makeText(getBaseContext(), "Stop it!" + new String(Character.toChars(0x1F624)), Toast.LENGTH_LONG).show();
+                    } else if (tapCount == 20) {
+                        Toast.makeText(getBaseContext(), "Last warning!!!" + new String(Character.toChars(0x1F621)), Toast.LENGTH_LONG).show();
+                    } else if (tapCount == 30) {
+                        Toast.makeText(getBaseContext(), "You just had to do it!" + new String(Character.toChars(0x1F625)), Toast.LENGTH_LONG).show();
+                        RotateAnimation rotateToolbarAnimation = new RotateAnimation(0, 3600, toolbar.getWidth() / 2, toolbar.getHeight() / 2);
+                        rotateToolbarAnimation.setDuration(5000);
+                        toolbar.startAnimation(rotateToolbarAnimation);
+                        RotateAnimation rotateTabsAnimation = new RotateAnimation(0, 3600, tabLayout.getWidth() / 2, tabLayout.getHeight() / 2);
+                        rotateTabsAnimation.setDuration(5000);
+                        tabLayout.startAnimation(rotateTabsAnimation);
+                        RotateAnimation rotatePagerAnimation = new RotateAnimation(0, 3600, viewPager.getWidth() / 2, viewPager.getHeight() / 2);
+                        rotatePagerAnimation.setDuration(5000);
+                        viewPager.startAnimation(rotatePagerAnimation);
                     }
                 }
             });
