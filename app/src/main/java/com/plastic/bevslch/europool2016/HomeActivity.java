@@ -14,10 +14,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.animation.RotateAnimation;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.plastic.bevslch.europool2016.Adapters.CircleTransformation;
 import com.plastic.bevslch.europool2016.Fragments.CupFragment;
@@ -44,13 +47,29 @@ public class HomeActivity extends AppCompatActivity {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         if (toolbar != null) {
             toolbar.setTitle("");
+            final TextView pointsText = (TextView) toolbar.findViewById(R.id.toolbar_points);
+            final ImageView userPic = (ImageView) toolbar.findViewById(R.id.toolbar_image);
             Picasso.with(this)
                     .load(PreffHelper.getInstance().getPhotoUrl())
                     .error(R.drawable.ic_account)
                     .placeholder(R.drawable.ic_account)
                     .resize(150, 150)
                     .transform(new CircleTransformation())
-                    .into((ImageView) toolbar.findViewById(R.id.toolbar_image));
+                    .into(userPic);
+            userPic.setOnClickListener(new View.OnClickListener() {
+                private int tapCount;
+
+                @Override
+                public void onClick(View v) {
+                    RotateAnimation rotateAnimation = new RotateAnimation(0, 360, v.getWidth() / 2, v.getHeight() / 2);
+                    rotateAnimation.setDuration(500);
+                    v.startAnimation(rotateAnimation);
+                    tapCount++;
+                    if (tapCount == 5) {
+                        Toast.makeText(getBaseContext(), "Stop it!!!" + new String(Character.toChars(0x1F620)), Toast.LENGTH_LONG).show();
+                    }
+                }
+            });
             String name = PreffHelper.getInstance().getName();
             if (name != null && name.contains(" ") && name.split(" ").length == 2) {
                 String[] nameParts = name.split(" ");
@@ -60,7 +79,6 @@ public class HomeActivity extends AppCompatActivity {
                     @Override
                     public void onBusEvent(Players eventData, Object sender) {
                         if (eventData != null && eventData.getPicUrl().equals(PreffHelper.getInstance().getPhotoUrl())) {
-                            final TextView pointsText = (TextView) toolbar.findViewById(R.id.toolbar_points);
                             pointsText.setText(getString(R.string.standing_item_pts, eventData.getPoints()));
                             ValueAnimator pointAnimation = ValueAnimator.ofInt(0, eventData.getPoints())
                                     .setDuration(1000);
@@ -72,6 +90,9 @@ public class HomeActivity extends AppCompatActivity {
                                 }
                             });
                             pointAnimation.start();
+                            RotateAnimation rotateAnimation = new RotateAnimation(0, 360, userPic.getWidth() / 2, userPic.getHeight() / 2);
+                            rotateAnimation.setDuration(1000);
+                            userPic.startAnimation(rotateAnimation);
                         }
                     }
                 });

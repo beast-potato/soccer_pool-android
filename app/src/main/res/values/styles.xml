@@ -13,6 +13,7 @@
     <style name="CustomTabLayoutStyle" parent="Base.Widget.Design.TabLayout">
         <item name="tabSelectedTextColor">@color/colorPrimaryDark</item>
         <item name="tabIndicatorColor">@color/colorAccent</item>
+        <item name="tabIndicatorHeight">3dp</item>
         <item name="tabTextAppearance">@style/CustomTabTexStyle</item>
     </style>
 
