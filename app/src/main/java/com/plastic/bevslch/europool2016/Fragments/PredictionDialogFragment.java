@@ -161,9 +161,9 @@ public class PredictionDialogFragment extends DialogFragment {
                 submit.setText(R.string.prediction_dialog_submit_progress);
                 submit.setEnabled(false);
                 penaltyWarning.setVisibility(View.GONE);
+                makePrediction(match.gameID, homeScore.getText().toString(), awayScore.getText().toString());
                 awayCheck.setVisibility(View.GONE);
                 homeCheck.setVisibility(View.GONE);
-                makePrediction(match.gameID, homeScore.getText().toString(), awayScore.getText().toString());
             }
         } else {
             Toast.makeText(getActivity(), "Score missing", Toast.LENGTH_SHORT).show();
@@ -228,6 +228,13 @@ public class PredictionDialogFragment extends DialogFragment {
                 }
             }
         });
+        if ("homeTeam".equals(match.prediction.winner)) {
+            awayCheck.setVisibility(View.GONE);
+            homeCheck.setVisibility(View.VISIBLE);
+        } else if ("awayTeam".equals(match.prediction.winner)) {
+            awayCheck.setVisibility(View.VISIBLE);
+            homeCheck.setVisibility(View.GONE);
+        }
 
     }
 

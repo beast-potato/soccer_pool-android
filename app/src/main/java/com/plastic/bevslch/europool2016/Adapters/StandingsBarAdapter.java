@@ -68,7 +68,7 @@ public class StandingsBarAdapter extends RecyclerView.Adapter<StandingsBarAdapte
                 .resize(150, 150)
                 .transform(new CircleTransformation())
                 .into(holder.image);
-        holder.barView.setColor(getColorForIndex((float) position, (float) playerMaxPoints));
+        holder.barView.setColor(getColorForIndex((float) position, players.size()));
         float percent = (float) player.getPoints() / (float) playerMaxPoints;
         holder.barView.setPercent(percent);
         ObjectAnimator barAnimation = ObjectAnimator.ofFloat(holder.barView, "percent", 0.0f, percent)
