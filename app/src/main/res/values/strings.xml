@@ -30,4 +30,5 @@
     <string name="prediction_dialog_score_hyphen">-</string>
     <string name="prediction_dialog_submit">Submit</string>
     <string name="prediction_dialog_submit_progress">Submitting &#8230;</string>
+    <string name="prediction_dialog_penalty_warning">Tap flag to\nselect winner.</string>
 </resources>

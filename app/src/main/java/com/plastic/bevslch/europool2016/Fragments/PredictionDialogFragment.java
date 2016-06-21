@@ -4,7 +4,9 @@ package com.plastic.bevslch.europool2016.Fragments;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -45,8 +47,8 @@ public class PredictionDialogFragment extends DialogFragment {
 
     // Views
     private View view;
-    private TextView homeName, awayName;
-    private ImageView homeFlag, awayFlag;
+    private TextView homeName, awayName, penaltyWarning;
+    private ImageView homeFlag, awayFlag, homeCheck, awayCheck;
     private EditText homeScore, awayScore;
     private Button submit;
 
@@ -84,6 +86,9 @@ public class PredictionDialogFragment extends DialogFragment {
         homeScore = (EditText) view.findViewById(R.id.prediction_score_home);
         awayScore = (EditText) view.findViewById(R.id.prediction_score_away);
         submit = (Button) view.findViewById(R.id.prediction_submit);
+        penaltyWarning = (TextView) view.findViewById(R.id.prediction_penalty_warning_text);
+        homeCheck = (ImageView) view.findViewById(R.id.prediction_check_home);
+        awayCheck = (ImageView) view.findViewById(R.id.prediction_check_away);
     }
 
     private void initListeners() {
@@ -103,16 +108,85 @@ public class PredictionDialogFragment extends DialogFragment {
                 return false;
             }
         });
+        TextWatcher tw = new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                updateViewsStates();
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        };
+        homeScore.addTextChangedListener(tw);
+        awayScore.addTextChangedListener(tw);
+        awayFlag.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                checkPenaltyWinner(false);
+            }
+        });
+        homeFlag.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                checkPenaltyWinner(true);
+            }
+        });
+    }
+
+    private void checkPenaltyWinner(boolean homeSelected) {
+        if (!TextUtils.isEmpty(homeScore.getText()) && !TextUtils.isEmpty(awayScore.getText()) && isScoresEqual() && match.requiresWinner) {
+            penaltyWarning.setVisibility(View.GONE);
+            if (homeSelected) {
+                homeCheck.setVisibility(View.VISIBLE);
+                awayCheck.setVisibility(View.GONE);
+            } else {
+                homeCheck.setVisibility(View.GONE);
+                awayCheck.setVisibility(View.VISIBLE);
+            }
+        }
     }
 
     private void submit() {
-        if (!TextUtils.isEmpty(homeScore.getText()) && !TextUtils.isEmpty(awayScore.getText())) {
-            submit.setText(R.string.prediction_dialog_submit_progress);
-            submit.setEnabled(false);
-            makePrediction(match.gameID, homeScore.getText().toString(), awayScore.getText().toString());
+        if (!TextUtils.isEmpty(homeScore.getText()) && !TextUtils.isEmpty(awayScore.getText().toString())) {
+            if (isScoresEqual() && match.requiresWinner && awayCheck.getVisibility() == View.GONE && homeCheck.getVisibility() == View.GONE) {
+                penaltyWarning.setVisibility(View.VISIBLE);
+            } else {
+                submit.setText(R.string.prediction_dialog_submit_progress);
+                submit.setEnabled(false);
+                penaltyWarning.setVisibility(View.GONE);
+                awayCheck.setVisibility(View.GONE);
+                homeCheck.setVisibility(View.GONE);
+                makePrediction(match.gameID, homeScore.getText().toString(), awayScore.getText().toString());
+            }
         } else {
             Toast.makeText(getActivity(), "Score missing", Toast.LENGTH_SHORT).show();
+            penaltyWarning.setVisibility(View.GONE);
+            awayCheck.setVisibility(View.GONE);
+            homeCheck.setVisibility(View.GONE);
         }
+    }
+
+    private void updateViewsStates() {
+        if (!TextUtils.isEmpty(homeScore.getText()) && !TextUtils.isEmpty(awayScore.getText().toString()) && isScoresEqual() && match.requiresWinner) {
+            penaltyWarning.setVisibility(View.VISIBLE);
+            awayCheck.setVisibility(View.GONE);
+            homeCheck.setVisibility(View.GONE);
+        } else {
+            penaltyWarning.setVisibility(View.GONE);
+            awayCheck.setVisibility(View.GONE);
+            homeCheck.setVisibility(View.GONE);
+        }
+    }
+
+    private boolean isScoresEqual() {
+        return homeScore.getText().toString().equals(awayScore.getText().toString());
     }
     private void getArgs() {
         Bundle args = getArguments();
@@ -149,6 +223,8 @@ public class PredictionDialogFragment extends DialogFragment {
                 if (homeScore.requestFocus()) {
                     InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
                     imm.showSoftInput(homeScore, InputMethodManager.SHOW_IMPLICIT);
+                    if (homeScore.getText() != null && homeScore.getText().length() > 0)
+                        homeScore.setSelection(homeScore.getText().length());
                 }
             }
         });
@@ -165,6 +241,12 @@ public class PredictionDialogFragment extends DialogFragment {
         predictEndpointApiRequest.setGameId(gameId);
         predictEndpointApiRequest.setHomeGoals(homeGoals);
         predictEndpointApiRequest.setAwayGoals(awayGoals);
+        if (awayCheck.getVisibility() == View.VISIBLE) {
+            predictEndpointApiRequest.setPenaltiesWinner("awayTeam");
+        } else if (homeCheck.getVisibility() == View.VISIBLE) {
+            predictEndpointApiRequest.setPenaltiesWinner("homeTeam");
+        }
+
         predictEndpointApiRequest.send(new ApiRequest.RequestCompletion<PredictEndpointApiResponse>() {
             @Override
             public void onResponse(PredictEndpointApiResponse data) {

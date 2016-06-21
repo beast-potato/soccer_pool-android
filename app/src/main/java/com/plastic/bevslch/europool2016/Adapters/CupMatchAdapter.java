@@ -71,14 +71,15 @@ public class CupMatchAdapter extends RecyclerView.Adapter<CupMatchAdapter.Fixtur
                 holder.finalScore.setVisibility(View.GONE);
                 holder.matchStartTime.setVisibility(View.VISIBLE);
                 holder.matchStartTime.setText(Utilities.formatDate(fixtures.get(position).startTime));
+                holder.pointsBagde.setVisibility(View.GONE);
             } else {
                 holder.matchStartTime.setVisibility(View.GONE);
                 holder.finalScore.setText(context.getString(R.string.cup_match_live, fixtures.get(position).homeGoals, fixtures.get(position).awayGoals));
+                holder.pointsBagde.setVisibility(View.VISIBLE);
             }
         } else {
             holder.finalScore.setText(context.getString(R.string.cup_match_final, fixtures.get(position).homeGoals, fixtures.get(position).awayGoals));
             holder.matchStartTime.setVisibility(View.GONE);
-            holder.pointsBagde.setVisibility(View.VISIBLE);
             holder.pointsBagde.setVisibility(View.VISIBLE);
         }
 
@@ -103,8 +104,10 @@ public class CupMatchAdapter extends RecyclerView.Adapter<CupMatchAdapter.Fixtur
             badge.setBackgroundColor(Color.GRAY);
         } else if (points < 5) {
             badge.setBackgroundColor(Color.YELLOW);
-        } else {
+        } else if (points == 5) {
             badge.setBackgroundColor(Color.GREEN);
+        } else {
+            badge.setBackgroundColor(Color.MAGENTA);
         }
     }
 

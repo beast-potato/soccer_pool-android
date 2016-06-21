@@ -22,4 +22,6 @@ public class PredictEndpoint {
     public String homeGoals;
     @UrlParam("awayGoals")
     public String awayGoals;
+    @UrlParam("winner")
+    public String penaltiesWinner; //homeTeam or awayTeam
 }

@@ -24,11 +24,25 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
 
-            <ImageView
-                android:id="@+id/prediction_flag_home"
-                android:layout_width="60dp"
-                android:layout_height="60dp"
-                android:scaleType="fitCenter"/>
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/prediction_flag_home"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:scaleType="fitCenter" />
+
+                <ImageView
+                    android:id="@+id/prediction_check_home"
+                    android:src="@drawable/ic_check"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:scaleType="fitCenter"
+                    android:visibility="gone" />
+            </RelativeLayout>
+
 
         </LinearLayout>
 
@@ -49,44 +63,72 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
 
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
             <ImageView
                 android:id="@+id/prediction_flag_away"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
                 android:scaleType="fitCenter"/>
 
+                <ImageView
+                    android:id="@+id/prediction_check_away"
+                    android:src="@drawable/ic_check"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:scaleType="fitCenter"
+                    android:visibility="gone" />
+            </RelativeLayout>
+
         </LinearLayout>
 
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/prediction_scores"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:id="@+id/prediction_layout"
         android:layout_centerHorizontal="true"
         android:layout_below="@id/prediction_teams"
-        android:orientation="horizontal">
+        android:orientation="vertical">
 
-        <EditText
-            android:id="@+id/prediction_score_home"
-            style="@style/PredictionDialogScore"
+        <LinearLayout
+            android:id="@+id/prediction_scores"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:imeOptions="actionNext" />
+            android:orientation="horizontal"
+            android:layout_gravity="center">
 
+            <EditText
+                android:id="@+id/prediction_score_home"
+                style="@style/PredictionDialogScore"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:imeOptions="actionNext" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/prediction_dialog_score_hyphen"
+                android:textSize="18sp" />
+
+            <EditText
+                android:id="@+id/prediction_score_away"
+                style="@style/PredictionDialogScore"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:imeOptions="actionDone" />
+
+        </LinearLayout>
         <TextView
+            android:id="@+id/prediction_penalty_warning_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/prediction_dialog_score_hyphen"
-            android:textSize="18sp"/>
-
-        <EditText
-            android:id="@+id/prediction_score_away"
-            style="@style/PredictionDialogScore"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:imeOptions="actionDone" />
-
+            android:text="@string/prediction_dialog_penalty_warning"
+            android:textColor="@color/colorAccent"
+            android:gravity="center"
+            android:visibility="gone" />
     </LinearLayout>
 
     <Button
@@ -94,7 +136,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_below="@id/prediction_scores"
+        android:layout_below="@id/prediction_layout"
         android:layout_marginTop="10dp"
         android:text="@string/prediction_dialog_submit"/>
 
